@@ -15,6 +15,7 @@ from api_pkg import dandelion,dbspotlight,opencalais,babelfy,adel,meaning_cloud,
 from api_pkg.utils.representation import *
 from time import gmtime, strftime
 import numpy as np
+import getopt
 
 
 def getPathName(folder,original_filepath,ext='p'):
@@ -38,6 +39,14 @@ args = sys.argv
 
 ground_truth = sys.argv[1]
 
+optlist, args = getopt.getopt(sys.argv[2:], '',['workers='
+                                                ])
+
+
+for opt, arg in optlist:
+        if opt == '--workers':
+            n_workers = int(arg)
+
 
 
 
@@ -54,16 +63,23 @@ def getAnnotations(text,lang=None,model_setting='default'):
     ]
     
     #print(strftime("%H:%M:%S", gmtime()))
-    
+    limit_failures = 3
+    waiting_secs = 7
     for ext in extractors_list:
-        try:
-            if ext.name == 'adel':
-                ext.extract(text,lang=lang,setting=model_setting)
-            else:
-                ext.extract(text,lang=lang)
-        except:
-            raise Exception("The extractor",ext.name,"presented an error during the API request phase\n"
-                            +str(sys.exc_info()[1]))
+        counter_failures = 0
+        while counter_failures >= 0 and counter_failures < limit_failures:
+            try:
+                if ext.name == 'adel':
+                    ext.extract(text,lang=lang,setting=model_setting)
+                else:
+                    ext.extract(text,lang=lang)
+                counter_failures = -1
+            except:
+                if counter_failures == limit_failures:
+                    raise Exception("The extractor",ext.name,"presented an error during the API request phase\n"
+                                    +str(sys.exc_info()[1]))
+                else:
+                    time.sleep(waiting_secs)
 
             
     #print(strftime("%H:%M:%S", gmtime()))
@@ -102,6 +118,8 @@ def getAnnotations(text,lang=None,model_setting='default'):
 
         if ext.recognition:
             type_list_dict[ext.name] = [a['type'] for a in annotations_ext]
+        else:
+            type_list_dict[ext.name] = [a['uri'] for a in annotations_ext]
         if ext.disambiguation:
             entity_list_dict[ext.name] = [a['uri'] for a in annotations_ext]
             
@@ -188,13 +206,16 @@ except:
 
 text_path_list = readTextsFromFolder(inputfolder_train,outputfolder_train) + readTextsFromFolder(inputfolder_test,outputfolder_test)
 
+try:
+    n_workers = n_workers
+except:
+    n_cpus = multiprocessing.cpu_count()
 
-n_cpus = multiprocessing.cpu_count()
-if n_cpus >= 8:
-    n_workers = int(multiprocessing.cpu_count() / 4) + 1
-else:
-    n_workers = max([min([3,multiprocessing.cpu_count()-1]),1])
-n_workers = 1
+    if n_cpus >= 8:
+        n_workers = int(multiprocessing.cpu_count() / 4) + 1
+    else:
+        n_workers = max([min([3,multiprocessing.cpu_count()-1]),1])
+
 print("n_workers",n_workers)
 
 
