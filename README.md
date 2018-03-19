@@ -65,4 +65,4 @@ pip3 install pyfasttext==0.4.4
 ```
 
 ## Dowbload data
-To be able to use the application, let's download the *data.zip* zipped folder at ![this link](https://fil.email/OV1IYgGb), unzip the folder and move it inside the *myapp* folder. Do not rename folders.
+To be able to use the application, let's download the *data.zip* zipped folder at [this link](https://fil.email/OV1IYgGb), unzip the folder and move it inside the *myapp* folder. Do not rename folders.
