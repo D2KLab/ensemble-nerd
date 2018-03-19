@@ -45,13 +45,16 @@ class MEANINGCLOUD(object):
                         "relevance":int(ann['relevance'])/100,
                         "uri":np.NAN
                     })
-        cleaned_annotations = removeDoubleOccurences(occurrences)
-        cleaned_annotations = addMissingChars(cleaned_annotations,text)
-        if not doubleCheck:
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            cleaned_annotations = createConsistencyText(cleaned_annotations,text)
-        self.annotations = cleaned_annotations
+        if len(occurrences) != 0:
+            cleaned_annotations = removeDoubleOccurences(occurrences)
+            cleaned_annotations = addMissingChars(cleaned_annotations,text)
+            if not doubleCheck:
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                cleaned_annotations = createConsistencyText(cleaned_annotations,text)
+            self.annotations = cleaned_annotations
+        else:
+            self.annotations = []
 
 
     def tokenize(self):

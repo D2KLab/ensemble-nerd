@@ -249,22 +249,23 @@ def setWikidataUrisfromDbpedia_fr(annotations_pd):
     return annotations_pd[~annotations_pd['uri'].isnull()]
     
 
-def setWikidataUrisfromDbpedia_en(annotations_pd):
-    db_en_uris = set(annotations_pd['uri'])
+def setWikidataUrisfromDbpedia_en(annotations_pd,name_col='uri'):
+    db_en_uris = set(annotations_pd[name_col])
     mapping_disambiguation = getDisambiguationListTuple(db_en_uris,
                                                         endpointURL='http://dbpedia.org/sparql',
                                                         query=dben_wiki_isDisambiguation
                                                        ).to_dict(orient='records')
     for m in mapping_disambiguation:
-        annotations_pd.loc[annotations_pd['uri'] ==  m['db_en_uri'],'uri']= m['db_en_uri_disambiguation']
-    db_en_uris = set(annotations_pd['uri'])
+        annotations_pd.loc[annotations_pd[name_col] ==  m['db_en_uri'],name_col]= m['db_en_uri_disambiguation']
+    db_en_uris = set(annotations_pd[name_col])
     mapping_db_en_wd = fromDbpediaToWikidataUri(db_en_uris)
     def getWikidataAssociatedUri(uri):
         try:
             return list(mapping_db_en_wd[mapping_db_en_wd['db_uri']==uri]['wd_uri'])[0].split('/')[-1]
         except:
             return np.NAN
-    annotations_pd['uri'] = annotations_pd['uri'].apply(
+    
+    annotations_pd['uri'] = annotations_pd[name_col].apply(
         lambda uri:getWikidataAssociatedUri(uri)
     )
     return annotations_pd[~annotations_pd['uri'].isnull()]

@@ -46,12 +46,15 @@ class OPENCALAIS(object):
                     "relevance":relevance,
                     "uri":np.NAN
                 })
-        cleaned_annotations = removeDoubleOccurences(opencalais_annotations)
-        if not doubleCheck:
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            cleaned_annotations = createConsistencyText(cleaned_annotations,text)
-        self.annotations = cleaned_annotations
+        if len(opencalais_annotations) != 0:
+            cleaned_annotations = removeDoubleOccurences(opencalais_annotations)
+            if not doubleCheck:
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                cleaned_annotations = createConsistencyText(cleaned_annotations,text)
+            self.annotations = cleaned_annotations
+        else:
+            self.annotations = []
 
     def tokenize(self):
         text = self.text

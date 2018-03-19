@@ -4,7 +4,10 @@ import json
 from api_pkg.utils.request import *
 from api_pkg.utils.metrics import *
 from api_pkg.utils.tokenization import *
+from api_pkg import dandelion,dbspotlight,opencalais,babelfy,adel,meaning_cloud,alchemy,textrazor
 from itertools import combinations
+from langdetect import detect
+
 
 
 EMBEDDING_DATA_PATH = 'data/embedding_data/'
@@ -68,10 +71,31 @@ def getTypeRepresentation(types_ordered_list,ontology_name,mapping_types_obj=MAP
                         vector = [min([x + y,1]) for x, y in zip(vector, vector_p)]
             features_array.append(vector)
         return np.array(features_array)
+'''
 
-def getTypeFeatures(type_list_dict,ontology_type_dict):
-    type_features_obj = {ext:getTypeRepresentation(type_list_dict[ext],ontology_type_dict[ext]) for ext in type_list_dict}
+    types_ordered_list1 = [a['uri'] for a in annotations]
+    type_features1 = getTypeRepresentation(types_ordered_list1,self.ontology_uri)
+    types_ordered_list2 = [a['type'] for a in annotations]
+    type_features2 = getTypeRepresentation(types_ordered_list2,self.ontology_type)
+    type_features = np.append(type_features1, type_features2, axis=1)
+
+
+'''
+
+def getTypeFeatures(type_list_dict,entity_list_dict,ontology_type_dict,ontology_entity_dict):
+    type_features_obj = {}
+    extractors_names = set(type_list_dict.keys()) | set(entity_list_dict.keys())
+    for ext in extractors_names:
+        if ext in type_list_dict and ext in entity_list_dict:
+            type_features_obj[ext] = np.append(getTypeRepresentation(type_list_dict[ext],ontology_type_dict[ext]),
+             getTypeRepresentation(entity_list_dict[ext],ontology_entity_dict[ext]), axis=1)
+        elif ext in type_list_dict:
+            type_features_obj[ext] = getTypeRepresentation(type_list_dict[ext],ontology_type_dict[ext])
+        elif ext in entity_list_dict:
+            type_features_obj[ext] = getTypeRepresentation(entity_list_dict[ext],ontology_entity_dict[ext])
     return type_features_obj
+
+
 
 
 
@@ -253,21 +277,139 @@ FASTTEXT_FR2= FastText('data/fasttext_data/my_corpus_model.bin')
 def getFastTextFeatures(text,lang):
     tokens = splitInTokens(text)
     if lang == 'fr':
-        for token in tokens:
-            token_text = token[0]
-            features_token = np.append(FASTTEXT_FR1[token_text],FASTTEXT_FR2[token_text])
-            try:
-                fasttextfeatures = np.append(fasttextfeatures,features_token, axis=0)
-            except:
-                fasttextfeatures = features_token
+        fasttextfeatures = np.array([
+            np.append(FASTTEXT_FR1[token[0]],FASTTEXT_FR2[token[0]])
+            for i,token in enumerate(tokens)])
     if lang == 'en':
-        for token in tokens:
-            token_text = token[0]
-            features_token = FASTTEXT_EN[token_text]
-            try:
-                fasttextfeatures = np.append(fasttextfeatures,features_token, axis=0)
-            except:
-                fasttextfeatures = features_token
+        fasttextfeatures = np.array([FASTTEXT_EN[token[0]] for i,token in enumerate(tokens)])
     return fasttextfeatures
 
 
+
+
+
+
+def getAnnotations(text,lang=None,model_setting='default'):
+    extractors_list = [
+        alchemy.ALCHEMY(),
+        adel.ADEL(),
+        dbspotlight.DBSPOTLIGHT(),
+        opencalais.OPENCALAIS(),
+        meaning_cloud.MEANINGCLOUD(),
+        dandelion.DANDELION(),
+        babelfy.BABELFY(),
+        textrazor.TEXTRAZOR()
+    ]
+    
+    #print(strftime("%H:%M:%S", gmtime()))
+    limit_failures = 3
+    waiting_secs = 7
+    for ext in extractors_list:
+        print(ext.name)
+        counter_failures = 0
+        while counter_failures >= 0 and counter_failures < limit_failures:
+            try:
+                if ext.name == 'adel':
+                    ext.extract(text,lang=lang,setting=model_setting)
+                else:
+                    ext.extract(text,lang=lang)
+                counter_failures = -1
+            except:
+                counter_failures += 1
+                if counter_failures == limit_failures:
+                    raise Exception("The extractor",ext.name,"presented an error during the API request phase\n"
+                                    +str(sys.exc_info()[1]))
+                else:
+                    time.sleep(waiting_secs)
+
+            
+    #print(strftime("%H:%M:%S", gmtime()))
+    extractors_responses = [ext.get_annotations() for ext in extractors_list]
+            
+    for ext in extractors_list:
+        try:
+            ext.parse()
+        except:
+            print(ext.get_annotations())
+            raise Exception("The extractor",ext.name,"presented an error during the API response parsing phase\n"+
+                            str(sys.exc_info()[1]))
+    #print(strftime("%H:%M:%S", gmtime()))
+    
+    for ext in extractors_list:
+        try:
+            ext.tokenize()
+        except:
+            print("The extractor",ext.name,"presented an error during the API response tokenizing phase")
+            print(sys.exc_info()[1])
+    
+    #print(strftime("%H:%M:%S", gmtime()))
+    type_list_dict = {}
+    entity_list_dict = {}
+    score_list_dict = {}
+    ontology_type_dict = {}
+
+    ontology_entity_dict = {}
+    for ext in extractors_list:
+        annotations_ext = ext.get_annotations()
+        try:
+            ontology_type_dict[ext.name] = ext.ontology
+            ontology_entity_dict[ext.name] = ext.ontology
+        except:
+            ontology_type_dict[ext.name] = ext.ontology_type
+            ontology_entity_dict[ext.name] = ext.ontology_uri
+
+        if ext.recognition:
+            type_list_dict[ext.name]=[a['type'] for a in annotations_ext]
+        if ext.disambiguation:
+            entity_list_dict[ext.name] = [a['uri'] for a in annotations_ext]
+            
+        ext_scores = []
+        for i,a in enumerate(annotations_ext):
+            scores_list = list()
+            try:
+                scores_list.append(a['relevance'])
+            except:
+                pass
+            try:
+                scores_list.append(a['confidence'])
+            except:
+                pass
+            if i == 0 and not bool(scores_list):
+                break
+            ext_scores.append(scores_list)
+            
+        if bool(ext_scores):
+            score_list_dict[ext.name] = np.array(ext_scores)
+        
+    return extractors_responses,type_list_dict,score_list_dict,entity_list_dict,ontology_type_dict,ontology_entity_dict
+
+
+'''
+
+
+'''
+def getFeatures(text,lang=None,model_setting='default'):
+    if not bool(lang):
+        lang = detect(text)
+    features_dict_all = {'features':{}}
+    extractors_responses,type_list_dict,score_list_dict,entity_list_dict,ontology_type_dict,ontology_entity_dict = getAnnotations(text,lang=lang,model_setting=model_setting)
+    features_dict_all["entity_list"] = entity_list_dict
+    features_dict_all["type_list"] = type_list_dict
+    features_dict_all["extractors_responses"] = extractors_responses
+    print('Forming features')
+    
+    if 'fasttext' not in features_dict_all['features']:
+        features_dict_all['features']['fasttext']=getFastTextFeatures(text,lang)
+    print('Formed Fasttext features')
+        
+    if 'type' not in features_dict_all['features']:
+        features_dict_all['features']['type']=getTypeFeatures(type_list_dict,entity_list_dict,ontology_type_dict,ontology_entity_dict)
+    print('Formed type features')
+    if 'score' not in features_dict_all['features']:
+        features_dict_all['features']['score']=score_list_dict
+        
+    print('Formed score features')
+    if 'entity' not in features_dict_all['features']:
+        features_dict_all['features']['entity'],features_dict_all['features']['entity_MATRIX']=getEntityFeatures(entity_list_dict,ontology_entity_dict,lang)
+    print('Formed entity features')
+    return features_dict_all

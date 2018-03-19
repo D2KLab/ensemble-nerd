@@ -170,15 +170,18 @@ class BABELFY(object):
                         "uri":uri,
                         'type':np.NAN
                     })
-        occurrences = setWikidataUrisfromDbpedia_en(pd.DataFrame(occurrences)).to_dict(orient='records')
+        if len(occurrences) != 0:
+            occurrences = setWikidataUrisfromDbpedia_en(pd.DataFrame(occurrences)).to_dict(orient='records')
 
-        cleaned_annotations = removeDoubleOccurences(occurrences)
-        cleaned_annotations = addMissingChars(cleaned_annotations,text)
-        if not doubleCheck:
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            raise Exception("The token start end char and the text don't correspond")
-        self.annotations = cleaned_annotations
+            cleaned_annotations = removeDoubleOccurences(occurrences)
+            cleaned_annotations = addMissingChars(cleaned_annotations,text)
+            if not doubleCheck:
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                raise Exception("The token start end char and the text don't correspond")
+            self.annotations = cleaned_annotations
+        else:
+            self.annotations = []
 
 
     def tokenize(self):

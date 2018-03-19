@@ -4,14 +4,34 @@ import sys
 from copy import copy
 from os import listdir
 from os.path import isfile, join
+from langdetect import detect
 import re
 from itertools import combinations
 import pickle
 import time
 import os.path
+from langdetect import detect
 from time import gmtime, strftime
 import numpy as np
 import getopt
+
+from pyfasttext import FastText
+FASTTEXT_EN = FastText('data/fasttext_data/wiki.en.bin')
+FASTTEXT_FR1= FastText('data/fasttext_data/wiki.fr.bin')
+FASTTEXT_FR2= FastText('data/fasttext_data/my_corpus_model.bin')
+
+
+
+def getFastTextFeatures(text,lang):
+    tokens = splitInTokens(text)
+    if lang == 'fr':
+        fasttextfeatures = np.array([
+            np.append(FASTTEXT_FR1[token[0]],FASTTEXT_FR2[token[0]])
+            for i,token in enumerate(tokens)])
+    if lang == 'en':
+        fasttextfeatures = np.array([FASTTEXT_EN[token[0]] for i,token in enumerate(tokens)])
+    return fasttextfeatures
+
 
 
 def getPathName(folder,original_filepath,ext='p'):
@@ -47,6 +67,17 @@ for opt, arg in optlist:
 
 
 
+
+'''
+
+
+'''
+def getFeaturesFasttext_(text,lang):
+    if not bool(lang):
+        lang = detect(text)
+    return getFastTextFeatures(text,lang)
+
+
 def worker_per_file(q,ground_truth,lang):
     flag = True
     while flag:
@@ -54,10 +85,11 @@ def worker_per_file(q,ground_truth,lang):
         if text == -1:
             flag = False
         else:
-            if not os.path.isfile(path):
+            if os.path.isfile(path):
                 print(path)
-                features_dict= getFeatures(text,lang=lang,model_setting=ground_truth)
-                pickle.dump( features_dict, open( path, "wb" ) )
+                features_dict_all = pickle.load(open(path,'rb'))
+                features_dict_all['features']['fasttext'] = getFeaturesFasttext_(text,lang=lang)
+                pickle.dump( features_dict_all, open( path, "wb" ) )
 
 
 

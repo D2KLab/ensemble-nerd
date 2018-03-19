@@ -12,6 +12,8 @@ def oneHotSimilarity(a,b):
 
 
 def ffIdfSimilarity(a,b):
+    if a == b:
+        return 1.0
     tfidf = TfidfVectorizer().fit_transform([a,b])
     pairwise_similarity = tfidf * tfidf.T
     return pairwise_similarity.A[0][1]

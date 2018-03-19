@@ -52,13 +52,16 @@ class TEXTRAZOR(object):
                     'relevance':ann["relevanceScore"],
                     'uri':uri}
                 occurrences.append(obj)
-        cleaned_annotations = removeDoubleOccurences(occurrences)
-        cleaned_annotations = addMissingChars(cleaned_annotations,text)
-        if not doubleCheck(cleaned_annotations):
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            raise Exception("The token start end char and the text don't correspond")
-        self.annotations = cleaned_annotations
+        if len(occurrences) != 0:
+            cleaned_annotations = removeDoubleOccurences(occurrences)
+            cleaned_annotations = addMissingChars(cleaned_annotations,text)
+            if not doubleCheck(cleaned_annotations):
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                raise Exception("The token start end char and the text don't correspond")
+            self.annotations = cleaned_annotations
+        else:
+            self.annotations = []
 
     def tokenize(self):
         text = self.text

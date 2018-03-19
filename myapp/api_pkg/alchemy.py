@@ -51,12 +51,15 @@ class ALCHEMY(object):
                     'relevance':ann['relevance'],
                     'uri':np.NAN}
                 occurrences.append(obj)
-        cleaned_annotations = removeDoubleOccurences(occurrences)
-        if not doubleCheck:
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            raise Exception("The token start end char and the text don't correspond")
-        self.annotations = cleaned_annotations
+        if len(occurrences) != 0:
+            cleaned_annotations = removeDoubleOccurences(occurrences)
+            if not doubleCheck:
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                raise Exception("The token start end char and the text don't correspond")
+            self.annotations = cleaned_annotations
+        else:
+            self.annotations = []
 
     def tokenize(self):
         text = self.text

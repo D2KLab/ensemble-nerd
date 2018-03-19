@@ -31,16 +31,20 @@ class ADEL(object):
         }
         params = (
             ('setting', setting),
-            ('lang', lang),
+            ('lang', lang)
         )
         text = removeAccents(text)
-        if setting == 'oke2016':
-            self.ontology = 'adelOKE2016'
-
+        if setting in ['oke2016','oke2015']:
+            self.ontology = 'adelOKE'
+        if setting in ['neel2015']:
+            self.ontology = 'adelNEEL'
         data = '{ "content": "'+text.replace('"','\\"')+'", "input": "raw", "output": "brat"}'
-        response = requests.post('http://'+self.endpoint+'/v1/extract',headers=headers, params=params,data=data)
+        try:
+            response = requests.post('http://'+self.endpoint+'/v1/extract',headers=headers, params=params,data=data)
 
-        self.annotations = response.text
+            self.annotations = response.text
+        except:
+            self.annotations = ''
 
     def parse(self):
         text = self.text
@@ -69,13 +73,15 @@ class ADEL(object):
                     }
         if len(annotations_dict) == 0:
             print(lines)
-        annotations = [annotations_dict[key] for key in annotations_dict]
-        cleaned_annotations = removeDoubleOccurences(annotations)
-        if not doubleCheck:
-            raise Exception("Double check parse false")
-        if not consistencyText(cleaned_annotations,text):
-            cleaned_annotations = createConsistencyText(cleaned_annotations,text)
-        self.annotations = cleaned_annotations
+            self.annotations = []
+        else:
+            annotations = [annotations_dict[key] for key in annotations_dict]
+            cleaned_annotations = removeDoubleOccurences(annotations)
+            if not doubleCheck:
+                raise Exception("Double check parse false")
+            if not consistencyText(cleaned_annotations,text):
+                cleaned_annotations = createConsistencyText(cleaned_annotations,text)
+            self.annotations = cleaned_annotations
 
     def tokenize(self):
         text = self.text

@@ -97,7 +97,7 @@ for opt, arg in optlist:
             patience = int(arg)
 
 extractors_types=['alchemy', 'adel', 'opencalais','dandelion', 'dbspotlight', 'babelfy', 'textrazor','meaning_cloud']
-saving_folder = 'data/models/'+base+'/'
+saving_folder = 'data/models/recognition/'+base+'/'
 
 try:
     os.makedirs(saving_folder)
@@ -169,7 +169,7 @@ def built_XY_samples(features_paths,groundtruth_paths,max_fragment_len,
     X_dict = {}
 
     for i,f_p in enumerate(features_paths):
-        #print(f_p)
+        print(f_p)
         obj = pickle.load(open(f_p,'rb'))
         features_obj = obj['features']
         uris_list = obj['entity_list']
@@ -223,30 +223,30 @@ def built_XY_samples(features_paths,groundtruth_paths,max_fragment_len,
             Y= [np.append(Y_file,nil_np_Y,axis=0)]
 
     for key in X_dict:
-        if key != 'fasttext.':
-            X_dict[key] = flatten_data(np.asarray(X_dict[key]))
-        else:
-            X_dict[key] = np.asarray(X_dict[key])
+        X_dict[key] = flatten_data(np.asarray(X_dict[key]))
+
     Y = flatten_data(np.asarray(Y))
     return X_dict,Y
 
+def getTypesPerFile(f,inv_types_map):
+    types = list()
+    for k,line in enumerate(f):
+        i_max = list(line).index(max(line))
+        line_round = line.round()
+        if tuple(line_round) in inv_types_map:
+            type_ = inv_types_map[tuple(line_round)]
+        elif 1 in line_round:
+            type_ = inv_types_map[tuple([int(i_max==n) for n in range(len(line_round))])]
+        else:
+            type_ = '0'
+        continue_ = int(line[-1])
+        types.append(type_)
+    return types
 
 def getTypesListCombination(predicted,inv_types_map):
     type_df_per_file = list()
     for j,f in enumerate(predicted):
-        types = list()
-        for k,line in enumerate(f):
-            i_max = list(line).index(max(line))
-            line_round = line.round()
-            if tuple(line_round) in inv_types_map:
-                type_ = inv_types_map[tuple(line_round)]
-            elif 1 in line_round:
-                type_ = inv_types_map[tuple([int(i_max==n) for n in range(len(line_round))])]
-            else:
-                type_ = '0'
-            continue_ = int(line[-1])
-            types.append(type_)
-        type_df_per_file.append(types)
+        type_df_per_file.append(getTypesPerFile(f,inv_types_map))
     return type_df_per_file
 
 def getTypesListGT(groundtruth_paths):
@@ -338,13 +338,32 @@ inv_types_map = {tuple(v): k for k, v in types_dict.items()}
 
 gt_test = getTypesListGT(groundtruth_paths_test)
 
-extractors_disambiguation=['dandelion', 'babelfy', 'textrazor']
+extractors_disambiguation=['dandelion','dbspotlight','babelfy', 'textrazor']
 
 X_dict_train,train_Y = built_XY_samples(features_paths_train,groundtruth_paths_train,max_fragment_len,features=features,continue_flag=False,type_flag=True,extractors_types=extractors_types,extractors_disambiguation = extractors_disambiguation)
 
 X_dict_test,test_Y = built_XY_samples(features_paths_test,groundtruth_paths_test,max_fragment_len,features=features,continue_flag=False,type_flag=True,extractors_types=extractors_types,extractors_disambiguation = extractors_disambiguation)
 
 print('Parsed')
+
+
+model_obj = dict()
+model_obj['train_X'] = X_dict_train
+model_obj['train_Y'] = {'main_output': train_Y}
+model_obj['test_X'] = X_dict_test
+model_obj['test_Y'] = {'main_output': test_Y}
+
+if set(features) == set(['type', 'score', 'entity', 'fasttext']):
+    model_obj['path'] = saving_folder+'model.h5'
+else:
+    model_obj['path'] = saving_folder+'_'.join(features)+'_model.h5'
+
+model_obj['inv_types_map'] = inv_types_map
+model_obj['types_dict'] = types_dict
+model_obj['max_fragment_len'] = max_fragment_len
+model_obj['types'] = types
+
+
 
 def generateConcactPartSimple(X,feat,ext_name,activation_middle,reg_alpha,eg_alpha,types):
     dim_input = X.shape[-1]
@@ -367,24 +386,6 @@ def generateConcactPartLSTM(X,feat,ext_name,activation_middle,reg_alpha,eg_alpha
     dense_middle = TimeDistributed(Dense(dim_out, activation=activation_middle,kernel_regularizer=l2(reg_alpha), bias_regularizer=l2(reg_alpha)))(x)
     dense_middle = Reshape((dim_out,))(dense_middle)
     return input_tensor,dense_middle
-
-
-model_obj = dict()
-model_obj['train_X'] = X_dict_train
-model_obj['train_Y'] = {'main_output': train_Y}
-model_obj['test_X'] = X_dict_test
-model_obj['test_Y'] = {'main_output': test_Y}
-
-if set(features) == set(['type', 'score', 'entity', 'fasttext']):
-    model_obj['path'] = saving_folder+'model.h5'
-else:
-    model_obj['path'] = saving_folder+'_'.join(features)+'_model.h5'
-
-model_obj['inv_types_map'] = inv_types_map
-model_obj['types_dict'] = types_dict
-model_obj['max_fragment_len'] = max_fragment_len
-model_obj['types'] = types
-
 to_concatenate_layers = []
 for feat in features:
     if feat in ['type','score']:
