@@ -121,17 +121,17 @@ For example, let's assume that *document-1.txt* contains this text:
 | eye|Role|Q774306|1        | 
 | surgeon|Role|Q774306|0    | 
 | father|Role|Q7565|0       | 
-| "|"|||0                   | 
+| ,|||0                   | 
 | henry|Person||0           | 
-| "|"|||0                   | 
+| ,|||0                   | 
 | and|||0                   | 
 | to|||0                    | 
 | a|||0                     | 
 | jewish|||0                | 
 | mother|Role|Q7560|0       | 
-| "|"|||0                   | 
+| ,|||0                   | 
 | fannie|Person||0          | 
-| "."|||0                   | 
+| .|||0                   | 
 
 ### Train new models
 Once 
