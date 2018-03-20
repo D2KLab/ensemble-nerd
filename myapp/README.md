@@ -75,7 +75,7 @@ If you have to add a new standard gold with the name <NEW_STANDARD_GOLD_NAME>, y
 * let's enter in the new folder and create two subfolders named *test* and *train*
 * let's create inside both  *test* and *train* folders two subfolders called *csv_ground_truth* and *txt_files*
 If the folders tree is correctly set up, it should appear as in the schema below: 
-
+```
 data
 └── training_data
     └── new_ground_truth
@@ -95,7 +95,7 @@ data
             └── txt_files
                 ├── document-5.txt
                 └── document-6.txt
-                
+```
 The *txt_files* folder contains the documents used to train and test the model. 
 At each textual document corresponds a file in the *csv_ground_truth* folder. 
 Such files contain tables: each row represents a token of the related document. The table is composed by 6 columns:
@@ -106,10 +106,10 @@ Such files contain tables: each row represents a token of the related document. 
 1. OFFSET: such column assumes 1 as value if the entity continues in the following token, otherwise 0
 
 
-For example, let's assume that "document-1.txt" contains this text: 
+For example, let's assume that *document-1.txt* contains this text: 
 *Marvin Lee Minsky was born to an eye surgeon father, Henry, and to a Jewish mother, Fannie.*
 
-| surface|type|uri|continue | 
+| surface|type|uri|offset | 
 |:-------------:|:-------------:|:-------------:|:-------------:| 
 | marvin|Person|Q204815|1   | 
 | lee|Person|Q204815|1      | 
