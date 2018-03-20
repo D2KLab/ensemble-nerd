@@ -39,8 +39,9 @@ The format in the HTTP header is respectively **text/plain** or **application/js
 ###### Parameters
 | lang|model_recognition|model_disambiguation| 
 |:-------------:|:-------------:|:-------------:|
-|string containing ISO-639-2 language code|string containing model recognition name|string containing model disambiguation name|
+|string containing ISO-639-2 language code||string containing model recognition name (defualt value: "oke2016")|string containing model disambiguation name (defualt value: "oke2016")|
 
+No one of these parameters is mandatory. If the language is not specified, it is automatically detected by the program.
 ###### Example
 A CURL POST request example is:
 ```
