@@ -26,8 +26,8 @@ class ADEL(object):
         self.lang=lang
         self.text=text
         headers = {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json',
+            'accept': 'text/plain;charset=utf-8',
+            'content-type': 'application/json;charset=utf-8',
         }
         params = (
             ('setting', setting),
@@ -41,7 +41,6 @@ class ADEL(object):
         data = '{ "content": "'+text.replace('"','\\"')+'", "input": "raw", "output": "brat"}'
         try:
             response = requests.post('http://'+self.endpoint+'/v1/extract',headers=headers, params=params,data=data)
-
             self.annotations = response.text
         except:
             self.annotations = ''

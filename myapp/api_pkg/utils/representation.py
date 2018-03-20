@@ -304,6 +304,7 @@ def getAnnotations(text,lang=None,model_setting='default'):
     #print(strftime("%H:%M:%S", gmtime()))
     limit_failures = 3
     waiting_secs = 7
+    print('Request phase')
     for ext in extractors_list:
         print(ext.name)
         counter_failures = 0
@@ -324,9 +325,10 @@ def getAnnotations(text,lang=None,model_setting='default'):
 
             
     #print(strftime("%H:%M:%S", gmtime()))
-    extractors_responses = [ext.get_annotations() for ext in extractors_list]
-            
+    extractors_responses = {ext.name:ext.get_annotations() for ext in extractors_list}
+    print('Parsing phase')
     for ext in extractors_list:
+        print(ext.name)
         try:
             ext.parse()
         except:
@@ -334,7 +336,7 @@ def getAnnotations(text,lang=None,model_setting='default'):
             raise Exception("The extractor",ext.name,"presented an error during the API response parsing phase\n"+
                             str(sys.exc_info()[1]))
     #print(strftime("%H:%M:%S", gmtime()))
-    
+    print('Tokenization phase')
     for ext in extractors_list:
         try:
             ext.tokenize()

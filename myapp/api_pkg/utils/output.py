@@ -24,8 +24,8 @@ model_recognition_names = set([f for f in listdir(model_folder_NER) if isdir(joi
 model_disambiguation_names = set([f for f in listdir(model_folder_NEL) if isdir(join(model_folder_NEL, f))])
 
 
-models_dict = {'recognition':{load_model(model_folder_NER+m+'/model.h5') for m in model_recognition_names},
-'disambiguation':{load_model(model_folder_NEL+m+'/model.h5') for m in model_disambiguation_names}
+MODELS_DICT = {'recognition':{m:load_model(model_folder_NER+m+'/model.h5') for m in model_recognition_names},
+'disambiguation':{m:load_model(model_folder_NEL+m+'/model.h5') for m in model_disambiguation_names}
 }
 
 
@@ -82,10 +82,10 @@ def getLISTPREDICTED(P,candidates):
 
 def built_X_sample_disambiguation(f,extractors_disambiguation=extractors_disambiguation,extractors_types=extractors_types):
 
-    if type(features_path) == dict:
-        obj = features_path
+    if type(f) == dict:
+        obj = f
     else:
-        obj = pickle.load(open(features_path,'rb'))
+        obj = pickle.load(open(f,'rb'))
 
     similarites = obj['features']['entity_MATRIX']
     sim_dict = dict()
@@ -217,7 +217,7 @@ def fillMissing(list_values,offsets,other_list):
         elif offset == 1:
             continue_index.append(i)
     return list_values
-def getNamedEntities(records):
+def getNamedEntities(records,text):
     entities = list()
     type_entities = list()
     uri_entitities = list()
@@ -254,6 +254,65 @@ def getNamedEntities(records):
                 start = None
     return entities,type_entities,uri_entitities
 
+def getTypeNamedEntities(records,text):
+    type_entities = list()
+    start = None
+    for rec in records:
+        cond_type = rec['type'] not in ['1','0']
+        if cond_type:
+            if rec['offset_type'] == 1:
+                start = rec['start']
+            else:
+                if not bool(start):
+                    start = rec['start']
+                e = {
+                    'surface':text[start:rec['end']+1],
+                    'start':start,
+                    'end':rec['end'],
+                    'type':rec['type_raw']
+                }
+                type_entities.append(e)
+                start = None
+
+    return type_entities
+
+def getUriNamedEntities(records,text):
+    uri_entities = list()
+    start = None
+    for rec in records:
+        cond_uri = rec['uri'] not in ['1','0']
+        if cond_uri:
+            if rec['offset_uri'] == 1:
+                start = rec['start']
+            else:
+                if not bool(start):
+                    start = rec['start']
+                e = {
+                    'surface':text[start:rec['end']+1],
+                    'start':start,
+                    'end':rec['end'],
+                    'uri':rec['uri_raw']
+                }
+                uri_entities.append(e)
+                start = None
+
+    return uri_entities
+
+def formBRATandSave(entities,output_path):
+    BASIC_BRAT_ANN = 'TINDEX\tTYPE START END\tSURFACE'
+    brat_lines = list()
+    for i,e in enumerate(entities):
+        if 'type' in e:
+            index_ = str(i+1)
+            type_ = e['type']
+            start_ = str(e['start'])
+            end_ = str(e['end']+1)
+            text_ = e['surface']
+            b_l = BASIC_BRAT_ANN.replace('INDEX',index_).replace('TYPE',type_).replace('START',start_).replace('END',end_).replace('SURFACE',text_)
+            brat_lines.append(b_l)
+    with open(output_path,'w+') as f_out:
+        f_out.write('\n'.join(brat_lines))
+
 def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016',model_name_disambiguation='oke2016',outputfilebase=None,return_flag=False,eval_flag=False):
 
 
@@ -288,21 +347,25 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
     model_recognition_path = model_folder_NEL+model_name_disambiguation+'/model.h5'
 
 
-    if model_name_recognition in models_dict['recognition']:
-        model_recognition= models_dict['recognition'][model_name_recognition]
+    if model_name_recognition in MODELS_DICT['recognition']:
+        model_recognition= MODELS_DICT['recognition'][model_name_recognition]
         X_dict_recogniton = built_X_sample_recognition(features_file)
         predicted= model_recognition.predict(X_dict_recogniton,verbose=0)
         type_list_predicted = getTypesPerFile(predicted,inv_types_map)
+        #print('ok recognition')
     else:
+        #print('NO recognition')
         type_list_predicted = ['0' for i in range(len(tokens))]
 
-    if model_name_disambiguation in models_dict['disambiguation']:
-        model_disambiguation = models_dict['disambiguation'][model_name_disambiguation]
+    if model_name_disambiguation in MODELS_DICT['disambiguation']:
+        model_disambiguation = MODELS_DICT['disambiguation'][model_name_disambiguation]
         X_dict_disambiguation,candidates_list =built_X_sample_disambiguation(features_file)
         predicted= model_disambiguation.predict(X_dict_disambiguation,verbose=0)
         entity_list_predicted = getLISTPREDICTED(predicted,candidates_list)
+        #print('ok disambiguation')
     else:
         entity_list_predicted = ['0' for i in range(len(tokens))]
+        #print('NO disambiguation')
 
 
     offsets,offsets_type,offsets_entity = estimateContinueInfo(type_list_predicted,entity_list_predicted)
@@ -310,6 +373,8 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
 
     type_list_predicted_filled = fillMissing(deepcopy(type_list_predicted),offsets,entity_list_predicted)
     entity_list_predicted_filled = fillMissing(deepcopy(entity_list_predicted),offsets,type_list_predicted)
+
+    #print(len(tokens),len(type_list_predicted_filled),len(entity_list_predicted_filled))
 
 
 
@@ -336,7 +401,9 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
 
 
 
-    entities,type_entities,uri_entitities = getNamedEntities(records)
+    entities,type_entities,uri_entitities = getNamedEntities(records,text)
+
+    #print('len entitities',len(entities))
 
 
 
@@ -349,3 +416,29 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
 
     with open(outputfilebase+'.json',"w") as f:
       json.dump(json_obj, f)
+
+
+    if eval_flag:
+
+        uri_entities_raw = getUriNamedEntities(records,text)
+        type_entities_raw = getTypeNamedEntities(records,text)
+
+        json_obj = {'text':text,'entities':type_entities}
+        with open(outputfilebase+'_type.json',"w") as f:
+          json.dump(json_obj, f)
+        json_obj = {'text':text,'entities':uri_entitities}
+        with open(outputfilebase+'_uri.json',"w") as f:
+          json.dump(json_obj, f)
+        json_obj = {'text':text,'entities':type_entities_raw}
+        with open(outputfilebase+'_type_raw.json',"w") as f:
+          json.dump(json_obj, f)
+        json_obj = {'text':text,'entities':uri_entities_raw}
+        with open(outputfilebase+'_uri_raw.json',"w") as f:
+          json.dump(json_obj, f)
+
+
+        formBRATandSave(entities,outputfilebase+'.ann')
+        formBRATandSave(type_entities,outputfilebase+'_type.ann')
+        formBRATandSave(type_entities_raw,outputfilebase+'_type_raw.ann')
+
+
