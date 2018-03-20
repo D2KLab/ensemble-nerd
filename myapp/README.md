@@ -1,5 +1,4 @@
-#Testing locally ensemble-nerd
-
+# Testing locally ensemble-nerd
 
 ## Getting Started
 To be able to run and try the ensemble method on your machine, some installations steps are required.
@@ -60,13 +59,13 @@ pip3 install pyfasttext==0.4.4
 ## Dowbload data
 To be able to use the application, let's download the *data.zip* zipped folder at [this link](https://fil.email/OV1IYgGb), unzip the folder and move it inside this folder. Do not rename folders.
 
-##Set up server
+## Set up server
 In order to locally set up the server, let's open the terminal, reach this folder and execute this command.
 ```
 python3 myapp_server.py
 ```
 
-##Create new models
+## Create new models
 
 ### Adding a new standard gold
 In order to create new ensemble models you have to train them using a standard gold. 
@@ -134,4 +133,9 @@ For example, let's assume that *document-1.txt* contains this text:
 | .|||0                   | 
 
 ### Train new models
-Once 
+Once you correctly parsed your new standard gold, let's go in *myapp* folder and run the following command to train the model.
+```
+python3 train_ensemble.py <NEW_STANDARD_GOLD_NAME> --lang <NEW_STANDARD_GOLD_LANGUAGE>
+```
+Executing this command you'll also get the evaluation scores got by the ensemble mdoel for the new standard gold. It could also take hours depending on the number of documents presented in the ground turh.
+
