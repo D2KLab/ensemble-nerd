@@ -38,7 +38,7 @@ The format in the HTTP header is respectively **text/plain** or **application/js
 
 ###### Parameters
 | lang|model_recognition|model_disambiguation| 
-|:-------------:|:-------------:|:-------------:|:-------------:| 
+|:-------------:|:-------------:|:-------------:|
 |string containing ISO-639-2 language code|string containing model recognition name|string containing model disambiguation name|
 
 ###### Example
