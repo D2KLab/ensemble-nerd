@@ -109,29 +109,29 @@ Such files contain tables: each row represents a token of the related document. 
 For example, let's assume that "document-1.txt" contains this text: 
 *Marvin Lee Minsky was born to an eye surgeon father, Henry, and to a Jewish mother, Fannie.*
 
-| surface,type,uri,continue | 
-|---------------------------| 
-| marvin,Person,Q204815,1   | 
-| lee,Person,Q204815,1      | 
-| minsky,Person,Q204815,0   | 
-| was,,,0                   | 
-| born,,,0                  | 
-| to,,,0                    | 
-| an,,,0                    | 
-| eye,Role,Q774306,1        | 
-| surgeon,Role,Q774306,0    | 
-| father,Role,Q7565,0       | 
-| ",",,,0                   | 
-| henry,Person,,0           | 
-| ",",,,0                   | 
-| and,,,0                   | 
-| to,,,0                    | 
-| a,,,0                     | 
-| jewish,,,0                | 
-| mother,Role,Q7560,0       | 
-| ",",,,0                   | 
-| fannie,Person,,0          | 
-| ".",,,0                   | 
+| surface|type|uri|continue | 
+|:-------------:|:-------------:|:-------------:|:-------------:| 
+| marvin|Person|Q204815|1   | 
+| lee|Person|Q204815|1      | 
+| minsky|Person|Q204815|0   | 
+| was|||0                   | 
+| born|||0                  | 
+| to|||0                    | 
+| an|||0                    | 
+| eye|Role|Q774306|1        | 
+| surgeon|Role|Q774306|0    | 
+| father|Role|Q7565|0       | 
+| "|"|||0                   | 
+| henry|Person||0           | 
+| "|"|||0                   | 
+| and|||0                   | 
+| to|||0                    | 
+| a|||0                     | 
+| jewish|||0                | 
+| mother|Role|Q7560|0       | 
+| "|"|||0                   | 
+| fannie|Person||0          | 
+| "."|||0                   | 
 
 ### Train new models
 Once 
