@@ -1,4 +1,3 @@
-from api_pkg import dandelion,dbspotlight,opencalais,babelfy,adel,meaning_cloud,alchemy,textrazor
 from api_pkg.utils.output import *
 from api_pkg.utils.representation import *
 from flask import Flask, request, jsonify, abort, make_response, current_app
@@ -18,14 +17,29 @@ def home_page():
 def getEntities():
     # /position?lat=43.697093&lon=7.270747
     # show the coordinates
+
     lang = request.args.get('lang', default=None, type=str)
-    if lang not in ['en','fr']:
-        lang = 'en'
+
     model_recognition = request.args.get('model_recognition', default='oke2016', type=str)
     model_disambiguation = request.args.get('model_disambiguation', default='oke2016', type=str)
-    text = request.data.decode('utf-8')
+
+    if request.headers['Content-Type'] == 'text/plain':
+        text = request.data.decode('utf-8')
+
+
+    if request.headers['Content-Type'] == 'application/json':
+        request_obj = request.json
+        if 'text' in request_obj:
+            text = request_obj['text']
+        else:
+            return 'No text passed'
+
+    print(lang,model_disambiguation,model_recognition)
+            
+
     features_obj = getFeatures(text,lang=lang,model_setting=model_recognition)
     response_obj = getAnnotationsOutput(features_obj,text,model_name_recognition=model_recognition,model_name_disambiguation=model_disambiguation,return_flag=True)
+    response_obj["extractors_responses"] = features_obj["extractors_responses"]
 
 
     return jsonify(response_obj)

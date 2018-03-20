@@ -1,0 +1,911 @@
+{
+  "entities": [
+    {
+      "end": 7, 
+      "start": 3, 
+      "surface": "Italy", 
+      "type": "Place", 
+      "uri": "Q38"
+    }, 
+    {
+      "end": 18, 
+      "start": 13, 
+      "surface": "rector", 
+      "type": "Role"
+    }, 
+    {
+      "end": 48, 
+      "start": 39, 
+      "surface": "university", 
+      "type": "Organization"
+    }, 
+    {
+      "end": 74, 
+      "start": 54, 
+      "surface": "Rappresentante Legale", 
+      "type": "Organization"
+    }, 
+    {
+      "end": 96, 
+      "start": 77, 
+      "surface": "Legal representative", 
+      "type": "Role"
+    }, 
+    {
+      "end": 115, 
+      "start": 106, 
+      "surface": "university", 
+      "type": "Organization"
+    }, 
+    {
+      "end": 119, 
+      "start": 118, 
+      "surface": "He", 
+      "type": "Person"
+    }, 
+    {
+      "end": 126, 
+      "start": 124, 
+      "surface": "she", 
+      "type": "Person"
+    }
+  ], 
+  "extractors_responses": {
+    "adel": "T1\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Organization 39 49\tuniversity\nT2\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role 13 19\trector\nT3\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Organization 106 116\tuniversity\nT4\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role 77 97\tLegal representative\nT5\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Organization 145 159\telectoral body\nT6\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Organization 54 75\tRappresentante Legale\nT7\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Place 3 8\tItaly\nT8\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role 118 120\tHe\nT9\thttp://www.ontologydesignpatterns.org/ont/dul/DUL.owl#Role 124 127\tshe\n", 
+    "alchemy": [
+      {
+        "count": 2, 
+        "relevance": 0.939691, 
+        "text": "Rappresentante Legale", 
+        "type": "Person"
+      }, 
+      {
+        "count": 1, 
+        "relevance": 0.480243, 
+        "text": "representative", 
+        "type": "JobTitle"
+      }, 
+      {
+        "count": 1, 
+        "disambiguation": {
+          "subtype": [
+            "Country"
+          ]
+        }, 
+        "relevance": 0.430966, 
+        "text": "Italy", 
+        "type": "Location"
+      }
+    ], 
+    "babelfy": [
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00047705n", 
+        "DBpediaURL": "http://dbpedia.org/resource/Italy", 
+        "babelSynsetID": "bn:00047705n", 
+        "charFragment": {
+          "end": 7, 
+          "start": 3
+        }, 
+        "coherenceScore": 0.9, 
+        "globalScore": 0.19786808794137242, 
+        "score": 0.9966442953020134, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 1, 
+          "start": 1
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s03516049n", 
+        "DBpediaURL": "http://dbpedia.org/resource/Rector_(academia)", 
+        "babelSynsetID": "bn:03516049n", 
+        "charFragment": {
+          "end": 18, 
+          "start": 13
+        }, 
+        "coherenceScore": 0.4, 
+        "globalScore": 0.05329780146568954, 
+        "score": 0.7766990291262136, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 3, 
+          "start": 3
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00015784n", 
+        "DBpediaURL": "http://dbpedia.org/resource/Head", 
+        "babelSynsetID": "bn:00015784n", 
+        "charFragment": {
+          "end": 30, 
+          "start": 27
+        }, 
+        "coherenceScore": 0.0, 
+        "globalScore": 0.0, 
+        "score": 0.0, 
+        "source": "MCS", 
+        "tokenFragment": {
+          "end": 6, 
+          "start": 6
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00079151n", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00079151n", 
+        "charFragment": {
+          "end": 48, 
+          "start": 39
+        }, 
+        "coherenceScore": 0.0, 
+        "globalScore": 0.0, 
+        "score": 0.0, 
+        "source": "MCS", 
+        "tokenFragment": {
+          "end": 9, 
+          "start": 9
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00048655n", 
+        "DBpediaURL": "http://dbpedia.org/resource/Law", 
+        "babelSynsetID": "bn:00048655n", 
+        "charFragment": {
+          "end": 81, 
+          "start": 77
+        }, 
+        "coherenceScore": 0.9, 
+        "globalScore": 0.13191205862758162, 
+        "score": 0.9850746268656716, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 14, 
+          "start": 14
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00050566n", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00050566n", 
+        "charFragment": {
+          "end": 96, 
+          "start": 77
+        }, 
+        "coherenceScore": 0.2, 
+        "globalScore": 0.002664890073284477, 
+        "score": 1.0, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 15, 
+          "start": 14
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00109702a", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00109702a", 
+        "charFragment": {
+          "end": 96, 
+          "start": 83
+        }, 
+        "coherenceScore": 0.2, 
+        "globalScore": 0.002664890073284477, 
+        "score": 1.0, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 15, 
+          "start": 15
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00079151n", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00079151n", 
+        "charFragment": {
+          "end": 115, 
+          "start": 106
+        }, 
+        "coherenceScore": 0.0, 
+        "globalScore": 0.0, 
+        "score": 0.0, 
+        "source": "MCS", 
+        "tokenFragment": {
+          "end": 19, 
+          "start": 19
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00087517v", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00087517v", 
+        "charFragment": {
+          "end": 137, 
+          "start": 131
+        }, 
+        "coherenceScore": 0.5, 
+        "globalScore": 0.019986675549633577, 
+        "score": 1.0, 
+        "source": "BABELFY", 
+        "tokenFragment": {
+          "end": 25, 
+          "start": 25
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00102081a", 
+        "DBpediaURL": "", 
+        "babelSynsetID": "bn:00102081a", 
+        "charFragment": {
+          "end": 153, 
+          "start": 145
+        }, 
+        "coherenceScore": 0.0, 
+        "globalScore": 0.0, 
+        "score": 0.0, 
+        "source": "MCS", 
+        "tokenFragment": {
+          "end": 28, 
+          "start": 28
+        }
+      }, 
+      {
+        "BabelNetURL": "http://babelnet.org/rdf/s00011744n", 
+        "DBpediaURL": "http://dbpedia.org/resource/Physical_body", 
+        "babelSynsetID": "bn:00011744n", 
+        "charFragment": {
+          "end": 158, 
+          "start": 155
+        }, 
+        "coherenceScore": 0.0, 
+        "globalScore": 0.0, 
+        "score": 0.0, 
+        "source": "MCS", 
+        "tokenFragment": {
+          "end": 29, 
+          "start": 29
+        }
+      }
+    ], 
+    "dandelion": [
+      {
+        "confidence": 0.7716, 
+        "end": 8, 
+        "id": 9804204, 
+        "label": "Kingdom of Italy", 
+        "spot": "Italy", 
+        "start": 3, 
+        "title": "Kingdom of Italy", 
+        "uri": "http://en.wikipedia.org/wiki/Kingdom_of_Italy"
+      }, 
+      {
+        "confidence": 0.7275, 
+        "end": 19, 
+        "id": 66772, 
+        "label": "Rector", 
+        "spot": "rector", 
+        "start": 13, 
+        "title": "Rector (academia)", 
+        "uri": "http://en.wikipedia.org/wiki/Rector_%28academia%29"
+      }, 
+      {
+        "confidence": 0.5725, 
+        "end": 31, 
+        "id": 37570, 
+        "label": "Head of government", 
+        "spot": "head", 
+        "start": 27, 
+        "title": "Head of government", 
+        "uri": "http://en.wikipedia.org/wiki/Head_of_government"
+      }, 
+      {
+        "confidence": 0.4401, 
+        "end": 49, 
+        "id": 19725260, 
+        "label": "University", 
+        "spot": "university", 
+        "start": 39, 
+        "title": "University", 
+        "uri": "http://en.wikipedia.org/wiki/University"
+      }, 
+      {
+        "confidence": 0.484, 
+        "end": 97, 
+        "id": 228102, 
+        "label": "Defense", 
+        "spot": "Legal representative", 
+        "start": 77, 
+        "title": "Defense (legal)", 
+        "uri": "http://en.wikipedia.org/wiki/Defense_%28legal%29"
+      }, 
+      {
+        "confidence": 0.4401, 
+        "end": 116, 
+        "id": 19725260, 
+        "label": "University", 
+        "spot": "university", 
+        "start": 106, 
+        "title": "University", 
+        "uri": "http://en.wikipedia.org/wiki/University"
+      }, 
+      {
+        "confidence": 0.4613, 
+        "end": 154, 
+        "id": 9457, 
+        "label": "Election", 
+        "spot": "electoral", 
+        "start": 145, 
+        "title": "Election", 
+        "uri": "http://en.wikipedia.org/wiki/Election"
+      }, 
+      {
+        "confidence": 0.3366, 
+        "end": 159, 
+        "id": 12974846, 
+        "label": "Cadaver", 
+        "spot": "body", 
+        "start": 155, 
+        "title": "Cadaver", 
+        "uri": "http://en.wikipedia.org/wiki/Cadaver"
+      }
+    ], 
+    "dbspotlight": [
+      {
+        "@URI": "http://dbpedia.org/resource/Italy", 
+        "@offset": "3", 
+        "@percentageOfSecondRank": "0.0031950275619594018", 
+        "@similarityScore": "0.9955915340704036", 
+        "@support": "150965", 
+        "@surfaceForm": "Italy", 
+        "@types": "Wikidata:Q6256,Schema:Place,Schema:Country,DBpedia:PopulatedPlace,DBpedia:Place,DBpedia:Location,DBpedia:Country"
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Rector_of_the_University_of_Aberdeen", 
+        "@offset": "13", 
+        "@percentageOfSecondRank": "0.005700668115428116", 
+        "@similarityScore": "0.9912551894106563", 
+        "@support": "141", 
+        "@surfaceForm": "rector", 
+        "@types": ""
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Head_of_government", 
+        "@offset": "27", 
+        "@percentageOfSecondRank": "0.6931800643520193", 
+        "@similarityScore": "0.40009849490985305", 
+        "@support": "2652", 
+        "@surfaceForm": "head", 
+        "@types": ""
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Law", 
+        "@offset": "77", 
+        "@percentageOfSecondRank": "2.770281864668754E-4", 
+        "@similarityScore": "0.9994880607479476", 
+        "@support": "26312", 
+        "@surfaceForm": "Legal", 
+        "@types": ""
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/United_States_House_of_Representatives", 
+        "@offset": "83", 
+        "@percentageOfSecondRank": "0.4270967030626184", 
+        "@similarityScore": "0.654803822699194", 
+        "@support": "44647", 
+        "@surfaceForm": "representative", 
+        "@types": "Wikidata:Q43229,Wikidata:Q24229398,Wikidata:Q11204,DUL:SocialPerson,DUL:Agent,Schema:Organization,DBpedia:Organisation,DBpedia:Legislature,DBpedia:Agent"
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Jesus", 
+        "@offset": "118", 
+        "@percentageOfSecondRank": "0.8584813247346289", 
+        "@similarityScore": "0.42838398594414084", 
+        "@support": "55422", 
+        "@surfaceForm": "He", 
+        "@types": "Http://xmlns.com/foaf/0.1/Person,Wikidata:Q5,Wikidata:Q24229398,Wikidata:Q215627,DUL:NaturalPerson,DUL:Agent,Schema:Person,DBpedia:Person,DBpedia:Agent"
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Election", 
+        "@offset": "131", 
+        "@percentageOfSecondRank": "0.0033588808119826706", 
+        "@similarityScore": "0.995443916982133", 
+        "@support": "6962", 
+        "@surfaceForm": "elected", 
+        "@types": ""
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Election", 
+        "@offset": "145", 
+        "@percentageOfSecondRank": "0.02654682201124135", 
+        "@similarityScore": "0.9127228483425982", 
+        "@support": "6962", 
+        "@surfaceForm": "electoral", 
+        "@types": ""
+      }, 
+      {
+        "@URI": "http://dbpedia.org/resource/Human_body", 
+        "@offset": "155", 
+        "@percentageOfSecondRank": "0.051168072201632504", 
+        "@similarityScore": "0.9086493436520574", 
+        "@support": "2561", 
+        "@surfaceForm": "body", 
+        "@types": "Wikidata:Q4936952,DBpedia:AnatomicalStructure"
+      }
+    ], 
+    "meaning_cloud": [
+      {
+        "form": "Italy", 
+        "id": "85c9d18db8", 
+        "relevance": "100", 
+        "sementity": {
+          "class": "instance", 
+          "fiction": "nonfiction", 
+          "id": "ODENTITY_COUNTRY", 
+          "type": "Top>Location>GeoPoliticalEntity>Country"
+        }, 
+        "semgeo_list": [
+          {
+            "continent": {
+              "form": "Europe", 
+              "id": "0404ea4d6c"
+            }
+          }
+        ], 
+        "semld_list": [
+          "http://en.wikipedia.org/wiki/Italy", 
+          "http://ar.wikipedia.org/wiki/\u0625\u064a\u0637\u0627\u0644\u064a\u0627", 
+          "http://ca.wikipedia.org/wiki/It\u00e0lia", 
+          "http://cs.wikipedia.org/wiki/It\u00e1lie", 
+          "http://da.wikipedia.org/wiki/Italien", 
+          "http://de.wikipedia.org/wiki/Italien", 
+          "http://es.wikipedia.org/wiki/Italia", 
+          "http://fi.wikipedia.org/wiki/Italia", 
+          "http://fr.wikipedia.org/wiki/Italie", 
+          "http://he.wikipedia.org/wiki/\u05d0\u05d9\u05d8\u05dc\u05d9\u05d4", 
+          "http://hi.wikipedia.org/wiki/\u0907\u091f\u0932\u0940", 
+          "http://id.wikipedia.org/wiki/Italia", 
+          "http://it.wikipedia.org/wiki/Italia", 
+          "http://ja.wikipedia.org/wiki/\u30a4\u30bf\u30ea\u30a2", 
+          "http://ko.wikipedia.org/wiki/\uc774\ud0c8\ub9ac\uc544", 
+          "http://nl.wikipedia.org/wiki/Itali\u00eb", 
+          "http://no.wikipedia.org/wiki/Italia", 
+          "http://pl.wikipedia.org/wiki/W\u0142ochy", 
+          "http://pt.wikipedia.org/wiki/It\u00e1lia", 
+          "http://ro.wikipedia.org/wiki/Italia", 
+          "http://ru.wikipedia.org/wiki/\u0418\u0442\u0430\u043b\u0438\u044f", 
+          "http://sv.wikipedia.org/wiki/Italien", 
+          "http://th.wikipedia.org/wiki/\u0e1b\u0e23\u0e30\u0e40\u0e17\u0e28\u0e2d\u0e34\u0e15\u0e32\u0e25\u0e35", 
+          "http://tr.wikipedia.org/wiki/\u0130talya", 
+          "http://zh.wikipedia.org/wiki/\u610f\u5927\u5229", 
+          "http://d-nb.info/gnd/4027833-5", 
+          "http://eurostat.linked-statistics.org/dic/c_birth#IT", 
+          "http://eurostat.linked-statistics.org/dic/c_ctrl#IT", 
+          "http://www4.wiwiss.fu-berlin.de/eurostat/resource/countries/Italia", 
+          "http://www4.wiwiss.fu-berlin.de/eurostat/resource/regions/Italia", 
+          "http://www4.wiwiss.fu-berlin.de/factbook/resource/Italy", 
+          "http://ghodata/r6-c89", 
+          "http://linkedgeodata.org/triplify/node26347360", 
+          "http://linked-web-apis.fit.cvut.cz/resource/italy_country", 
+          "http://data.nytimes.com/55757685640197570561", 
+          "http://data.nytimes.com/N24677136460673212531", 
+          "http://sw.cyc.com/concept/Mx4rvVjMgZwpEbGdrcN5Y29ycA", 
+          "http://openei.org/resources/Italy", 
+          "http://rdfdata.eionet.europa.eu/ramon/nuts/IT", 
+          "http://transparency.270a.info/classification/country/IT", 
+          "http://umbel.org/umbel/rc/Country", 
+          "http://umbel.org/umbel/rc/Location_Underspecified", 
+          "http://umbel.org/umbel/rc/PopulatedPlace", 
+          "http://worldbank.270a.info/classification/country/IT", 
+          "@giroditalia", 
+          "@Italia", 
+          "@ItaliaNEWS", 
+          "@ItalyMagazine", 
+          "@livinginitaly", 
+          "@newsfromitaly", 
+          "@RadioItalia", 
+          "@twitter_it", 
+          "sumo:Nation"
+        ], 
+        "standard_list": [
+          {
+            "id": "ISO3166-1-a2", 
+            "value": "IT"
+          }, 
+          {
+            "id": "ISO3166-1-a3", 
+            "value": "ITA"
+          }
+        ], 
+        "variant_list": [
+          {
+            "endp": "7", 
+            "form": "Italy", 
+            "inip": "3"
+          }
+        ]
+      }, 
+      {
+        "form": "university and", 
+        "id": "__16442885833321601586", 
+        "relevance": "100", 
+        "sementity": {
+          "class": "instance", 
+          "confidence": "unknown", 
+          "type": "Top>Organization>EducationalOrganization>University"
+        }, 
+        "variant_list": [
+          {
+            "endp": "52", 
+            "form": "university and", 
+            "inip": "39"
+          }
+        ]
+      }, 
+      {
+        "form": "Rappresentante Legale", 
+        "id": "__4715391998805152478", 
+        "relevance": "100", 
+        "sementity": {
+          "class": "instance", 
+          "confidence": "unknown", 
+          "type": "Top"
+        }, 
+        "variant_list": [
+          {
+            "endp": "74", 
+            "form": "Rappresentante Legale", 
+            "inip": "54"
+          }
+        ]
+      }
+    ], 
+    "opencalais": [
+      {
+        "_typeGroup": "topics", 
+        "forenduserdisplay": "false", 
+        "name": "Education", 
+        "score": 0.806
+      }, 
+      {
+        "_typeGroup": "language", 
+        "forenduserdisplay": "false", 
+        "language": "http://d.opencalais.com/lid/DefaultLangId/English", 
+        "permid": "505062"
+      }, 
+      {
+        "_typeGroup": "socialTag", 
+        "forenduserdisplay": "true", 
+        "id": "http://d.opencalais.com/dochash-1/aeb217ae-eb99-38c6-bfba-9f17f50d5a97/SocialTag/1", 
+        "importance": "1", 
+        "name": "Academic administration", 
+        "originalValue": "Academic administration", 
+        "socialTag": "http://d.opencalais.com/genericHasher-1/6c16dd5b-6c9d-3045-bb43-b1fb9bd9c6ad"
+      }, 
+      {
+        "_typeGroup": "socialTag", 
+        "forenduserdisplay": "true", 
+        "id": "http://d.opencalais.com/dochash-1/aeb217ae-eb99-38c6-bfba-9f17f50d5a97/SocialTag/2", 
+        "importance": "1", 
+        "name": "Rector", 
+        "originalValue": "Rector (academia)", 
+        "socialTag": "http://d.opencalais.com/genericHasher-1/c4edb625-130b-3a55-b52f-2285c4775ecb"
+      }, 
+      {
+        "_typeGroup": "socialTag", 
+        "forenduserdisplay": "true", 
+        "id": "http://d.opencalais.com/dochash-1/aeb217ae-eb99-38c6-bfba-9f17f50d5a97/SocialTag/3", 
+        "importance": "1", 
+        "name": "Filename", 
+        "originalValue": "Filename", 
+        "socialTag": "http://d.opencalais.com/genericHasher-1/8766beaa-7bb5-3741-ac5f-aa3b4a080ccf"
+      }, 
+      {
+        "_typeGroup": "socialTag", 
+        "forenduserdisplay": "true", 
+        "id": "http://d.opencalais.com/dochash-1/aeb217ae-eb99-38c6-bfba-9f17f50d5a97/SocialTag/4", 
+        "importance": "2", 
+        "name": "Computer file", 
+        "originalValue": "Computer file", 
+        "socialTag": "http://d.opencalais.com/genericHasher-1/4812ee66-b11e-34f2-b724-3b1034def2d4"
+      }, 
+      {
+        "_typeGroup": "versions", 
+        "version": [
+          "DIY-Categorization-fnr-TRCS-prcng_3:20171117095241:20171117095241", 
+          "DIY-Categorization-fnr-TRCS-curint-News:20180221133342:20180221133342", 
+          "DIY-Categorization-fnr-TRCS-capx:20170627191152:20170627191152", 
+          "DIY-Categorization-fnr-TRCS-cstcut_new-News:20180301140156:20180301140156", 
+          "DIY-Categorization-fnr-TRCS-margnu:20171117095324:20171117095324", 
+          "Deals Index:201803201120:201803201120", 
+          "DIY-Categorization-fnr-TRCS-indx_stsale:20170323110805:20170323110805", 
+          "DIY-Categorization-fnr-TRCS-comptn:20170621141739:20170621141739", 
+          "index-refineries:201803171510:201803171510", 
+          "DIY-Categorization-fnr-TRCS-regs_buyb_new:20170509091609:20170509091609", 
+          "config-physicalAssets-powerStations:743:743", 
+          "NextTags:OneCalais_11.5-RELEASE:211", 
+          "SpanishIM:OneCalais_11.5-RELEASE:38", 
+          "DIY-Categorization-fnr-TRCS-infl-News:20180206095852:20180206095852", 
+          "DIY-Categorization-fnr-TRCS-newjbs:20180124163802:20180124163802", 
+          "DIY-Categorization-fnr-TRCS-dis:20170418132337:20170418132337", 
+          "DIY-Categorization-fnr-TRCS-revdrv2-News:20180202125843:20180202125843", 
+          "DIY-Categorization-fnr-TRCS-splitb_r1:20170329082516:20170329082516", 
+          "DIY-Categorization-fnr-TRCS-alu-News:20180314130406:20180314130406", 
+          "DIY-Categorization-fnr-TRCS-esgenv_2-News:20180202131300:20180202131300", 
+          "DIY-Categorization-fnr-TRCS-margnd_2:20171117095121:20171117095121", 
+          "DIY-Categorization-fnr-TRCS-change_of_cfo_joel_res-Research:20180315092841:20180315092841", 
+          "config-sca-DataPackage:50:50", 
+          "config-companyNe:753:753", 
+          "DIY-Categorization-fnr-TRCS-acb:20170502102348:20170502102348", 
+          "DIY-Categorization-fnr-TRCS-stsale_new-News:20180302131833:20180302131833", 
+          "DIY-Categorization-fnr-TRCS-hosal_jayasimha-News:20180320092027:20180320092027", 
+          "DIY-Categorization-fnr-TRCS-levrge:20170621122109:20170621122109", 
+          "DIY-Categorization-fnr-TRCS-hedge_list1:20170625000000:20170625000000", 
+          "SECHeaderMetadataIM:OneCalais_11.5-RELEASE:38", 
+          "DIY-Categorization-fnr-TRCS-esggov-News:20180301091656:20180301091656", 
+          "DIY-Categorization-fnr-TRCS-sales1:20171219091829:20171219091829", 
+          "config-refreshableDIY:1:1", 
+          "DIY-Categorization-fnr-TRCS-crycur:20171121113558:20171121113558", 
+          "DIY-Categorization-fnr-TRCS-rmrmrg:20171204112525:20171204112525", 
+          "DIY-Categorization-fnr-TRCS-capital_expenditure_rama_rch2-Research:20180305132538:20180305132538", 
+          "DIY-Categorization-fnr-TRCS-frxrte:20171229123536:20171229123536", 
+          "DIY-Categorization-fnr-TRCS-esgsoc_2-News:20180315093602:20180315093602", 
+          "People Index:201803201122:201803201122", 
+          "DIY-Categorization-fnr-TRCS-awlq:20170331124441:20170331124441", 
+          "config-negativeSignature:743:743", 
+          "DIY-Categorization-fnr-TRCS-fake1_monop_bnkcap_new:20170405133257:20170405133257", 
+          "Dial4J:OneCalais_11.5-RELEASE:38", 
+          "AutocoderRuntimeIM:OneCalais_11.5-RELEASE:38", 
+          "DIY-Categorization-fnr-TRCS-dbtr_new:20170315123740:20170315123740", 
+          "DIY-Categorization-fnr-TRCS-scale_2:20171130072915:20171130072915", 
+          "OA Override:757:757", 
+          "DIY-Categorization-fnr-TRCS-hrgt:20170427081548:20170427081548", 
+          "DIY-Categorization-fnr-TRCS-xpand:20170323144646:20170323144646", 
+          "DIY-Categorization-fnr-TRCS-kycterror-News:20180223164257:20180223164257", 
+          "DIY-Categorization-fnr-TRCS-leverage_ratios_rama_rch-Research:20180305132725:20180305132725", 
+          "DIY-Categorization-fnr-TRCS-same_store_sales_sai_rch-Research:20180320084305:20180320084305", 
+          "DIY-Categorization-fnr-TRCS-bonus_share_issues_sai_rch-Research:20180305132618:20180305132618", 
+          "DIY-Categorization-fnr-TRCS-resass-News:20180208130324:20180208130324", 
+          "DIY-Categorization-fnr-TRCS-allcemrgdvst2:20170424130000:20170424130000", 
+          "DIY-Categorization-fnr-TRCS-ordr:20170313151239:20170313151239", 
+          "People Override:743:743", 
+          "DIY-Categorization-fnr-TRCS-hrgt_recll:20170522120000:20170522120000", 
+          "index-company-oa3:201803201115:201803201115", 
+          "index-vessels:201803171440:201803171440", 
+          "DIY-Categorization-fnr-TRCS-brib_r1:20170329090629:20170329090629", 
+          "DIY-Categorization-fnr-TRCS-cvalu:20171212133524:20171212133524", 
+          "DIY-Categorization-fnr-TRCS-csent-News:20180314134456:20180314134456", 
+          "BrokerResearchIM:OneCalais_11.5-RELEASE:38", 
+          "config-forEndUserDisplay:3:3", 
+          "config-refineries:743:743", 
+          "DIY-Categorization-fnr-TRCS-cdo2-News:20180315084530:20180315084530", 
+          "DIY-Categorization-fnr-TRCS-prdlch-News:20180201133354:20180201133354", 
+          "DIY-Categorization-fnr-TRCS-strategic_combinations_joel_rch-Research:20180315092813:20180315092813", 
+          "DIY-Categorization-fnr-TRCS-ipr-News:20180319134217:20180319134217", 
+          "DIY-Categorization-fnr-TRCS-fapm:20170713144316:20170713144316", 
+          "DIY-Categorization-fnr-TRCS-class:20170315123207:20170315123207", 
+          "config-cse:743:743", 
+          "OneCalaisIM:OneCalais_11.5-RELEASE:38", 
+          "DIY-Categorization-fnr-TRCS-isu_dat_r:20170405124144:20170405124144", 
+          "DIY-Categorization-fnr-TRCS-cnsl_sisu:20170321144134:20170321144134", 
+          "DIY-Categorization-fnr-TRCS-newjbs-News:20180123114120:20180123114120", 
+          "DIY-Categorization-fnr-TRCS-shract_r1:20170412111808:20170412111808", 
+          "config-vessels:743:743", 
+          "DIY-Categorization-fnr-TRCS-product_shipments_rashmi_rch2-Research:20180313094806:20180313094806", 
+          "OneCalais:OneCalais_11.5-RELEASE:211", 
+          "DIY-Categorization-fnr-TRCS-invtry_09_25_2017:20171120093416:20171120093416", 
+          "DIY-Categorization-fnr-TRCS-mktshr2:20170705120412:20170705120412", 
+          "DIY-RCS-fnr-TRCS-cavs:4:4", 
+          "DIY-Categorization-fnr-TRCS-divestitures_spin_offs_rash_rch-Research:20180305132659:20180305132659", 
+          "DIY-Categorization-fnr-TRCS-blktrd_r1:20171116075645:20171116075645", 
+          "DIY-Categorization-fnr-TRCS-trd_tax:20170309132522:20170309132522", 
+          "DIY-Categorization-fnr-TRCS-sov_2:20170522130956:20170522130956", 
+          "DIY-Categorization-fnr-TRCS-bons:20170406103713:20170406103713", 
+          "DIY-Categorization-fnr-TRCS-corruption___bribery___joel_rch-Research:20180319102344:20180319102344", 
+          "DIY-Categorization-fnr-TRCS-exchange_rate_impact_rama_rsh-Research:20180312091507:20180312091507", 
+          "DIY-Categorization-fnr-TRCS-bankruptcy_insolvency_rsch_joel-Research:20180315095938:20180315095938", 
+          "DIY-Categorization-fnr-TRCS-blkchn_4-News:20180123105513:20180123105513", 
+          "DIY-Categorization-fnr-TRCS-segrev:20171117133125:20171117133125", 
+          "DIY-Categorization-fnr-TRCS-hrgt_namec:20170329090731:20170329090731", 
+          "DIY-RCS-fnr-TRCS-nd:3:3", 
+          "DIY-Categorization-fnr-TRCS-stx:20170530123138:20170530123138", 
+          "DIY-Categorization-fnr-TRCS-pmi-News:20180214153232:20180214153232", 
+          "config-physicalAssets-mines:743:743", 
+          "SocialTags Index:201803050435:201803050435", 
+          "BlackList:743:743", 
+          "DIY-Categorization-fnr-TRCS-shpmnt_new2:20171116121809:20171116121809", 
+          "DIY-Categorization-fnr-TRCS-gol-News:20180319131232:20180319131232", 
+          "DIY-Categorization-fnr-TRCS-crptax:20171117095403:20171117095403", 
+          "DIY-Categorization-fnr-TRCS-cppr-News:20180315144023:20180315144023", 
+          "index-ports:201803172045:201803172045", 
+          "FrenchIM:OneCalais_11.5-RELEASE:38", 
+          "config-physicalAssets-ports:743:743", 
+          "DIY-Categorization-fnr-TRCS-ream:20170529065740:20170529065740", 
+          "DIY-Categorization-fnr-TRCS-chld:20170524084254:20170524084254", 
+          "DIY-Categorization-fnr-TRCS-allce:20170323145654:20170323145654", 
+          "DIY-Categorization-fnr-TRCS-medreg:20170508120210:20170508120210", 
+          "config-drugs:743:743", 
+          "DIY-Categorization-fnr-TRCS-exrsks:20171129184952:20171129184952"
+        ]
+      }, 
+      {
+        "_type": "Position", 
+        "_typeGroup": "entities", 
+        "_typeReference": "http://s.opencalais.com/1/type/em/e/Position", 
+        "forenduserdisplay": "false", 
+        "instances": [
+          {
+            "detection": "[name=\"file\"; filename=\"file\" \n \nIn Italy the ]rector[ is the head of the university and Rappresentante]", 
+            "exact": "rector", 
+            "length": 6, 
+            "offset": 113, 
+            "prefix": "name=\"file\"; filename=\"file\" \n \nIn Italy the ", 
+            "suffix": " is the head of the university and Rappresentante"
+          }
+        ], 
+        "name": "rector", 
+        "relevance": 0.2
+      }, 
+      {
+        "_type": "Position", 
+        "_typeGroup": "entities", 
+        "_typeReference": "http://s.opencalais.com/1/type/em/e/Position", 
+        "forenduserdisplay": "false", 
+        "instances": [
+          {
+            "detection": "[of the university and Rappresentante Legale (]Legal representative[) of the university. He or she is elected by an]", 
+            "exact": "Legal representative", 
+            "length": 20, 
+            "offset": 177, 
+            "prefix": "of the university and Rappresentante Legale (", 
+            "suffix": ") of the university. He or she is elected by an"
+          }
+        ], 
+        "name": "Legal representative", 
+        "relevance": 0.2
+      }, 
+      {
+        "_type": "Position", 
+        "_typeGroup": "entities", 
+        "_typeReference": "http://s.opencalais.com/1/type/em/e/Position", 
+        "forenduserdisplay": "false", 
+        "instances": [
+          {
+            "detection": "[filename=\"file\" \n \nIn Italy the rector is ]the head[ of the university and Rappresentante Legale]", 
+            "exact": "the head", 
+            "length": 8, 
+            "offset": 123, 
+            "prefix": "filename=\"file\" \n \nIn Italy the rector is ", 
+            "suffix": " of the university and Rappresentante Legale"
+          }
+        ], 
+        "name": "head", 
+        "relevance": 0.2
+      }, 
+      {
+        "_type": "Country", 
+        "_typeGroup": "entities", 
+        "_typeReference": "http://s.opencalais.com/1/type/em/e/Country", 
+        "forenduserdisplay": "true", 
+        "instances": [
+          {
+            "detection": "[form-data; name=\"file\"; filename=\"file\" \n \nIn ]Italy[ the rector is the head of the university and]", 
+            "exact": "Italy", 
+            "length": 5, 
+            "offset": 103, 
+            "prefix": "form-data; name=\"file\"; filename=\"file\" \n \nIn ", 
+            "suffix": " the rector is the head of the university and"
+          }
+        ], 
+        "name": "Italy", 
+        "relevance": 0.2, 
+        "resolutions": [
+          {
+            "latitude": "44.2632", 
+            "longitude": "11.4402833333", 
+            "name": "Italy", 
+            "permid": "100145", 
+            "rcscode": "G:5J", 
+            "shortname": "Italy"
+          }
+        ]
+      }
+    ], 
+    "textrazor": [
+      {
+        "confidenceScore": 0.9549, 
+        "endingPos": 19, 
+        "entityEnglishId": "Rector (ecclesiastical)", 
+        "entityId": "Rector (ecclesiastical)", 
+        "freebaseId": "/m/0k0hk8x", 
+        "freebaseTypes": [
+          "/organization/role", 
+          "/religion/religious_leadership_title", 
+          "/people/profession"
+        ], 
+        "id": 0, 
+        "matchedText": "rector", 
+        "matchingTokens": [
+          3
+        ], 
+        "relevanceScore": 0.05731, 
+        "startingPos": 13, 
+        "wikiLink": "http://en.wikipedia.org/wiki/Rector_(ecclesiastical)", 
+        "wikidataId": "Q6415017"
+      }, 
+      {
+        "confidenceScore": 3.134, 
+        "endingPos": 8, 
+        "entityEnglishId": "Italy", 
+        "entityId": "Italy", 
+        "freebaseId": "/m/03rjj", 
+        "freebaseTypes": [
+          "/periodicals/newspaper_circulation_area", 
+          "/organization/organization_member", 
+          "/location/dated_location", 
+          "/military/military_combatant", 
+          "/law/court_jurisdiction_area", 
+          "/location/country", 
+          "/sports/sports_team_location", 
+          "/sports/sport_country", 
+          "/exhibitions/exhibition_subject", 
+          "/organization/organization_scope", 
+          "/symbols/name_source", 
+          "/symbols/flag_referent", 
+          "/government/governmental_jurisdiction", 
+          "/location/administrative_division", 
+          "/travel/travel_destination", 
+          "/organization/organization_founder", 
+          "/meteorology/forecast_zone", 
+          "/fictional_universe/fictional_setting", 
+          "/location/region", 
+          "/media_common/netflix_genre", 
+          "/location/statistical_region", 
+          "/book/book_subject", 
+          "/olympics/olympic_participating_country", 
+          "/film/film_location", 
+          "/exhibitions/exhibition_venue", 
+          "/biology/breed_origin", 
+          "/business/business_location", 
+          "/food/beer_country_region", 
+          "/business/employer", 
+          "/location/location"
+        ], 
+        "id": 1, 
+        "matchedText": "Italy", 
+        "matchingTokens": [
+          1
+        ], 
+        "relevanceScore": 0.04938, 
+        "startingPos": 3, 
+        "type": [
+          "Place", 
+          "PopulatedPlace", 
+          "Country"
+        ], 
+        "wikiLink": "http://en.wikipedia.org/wiki/Italy", 
+        "wikidataId": "Q38"
+      }, 
+      {
+        "confidenceScore": 0.5, 
+        "endingPos": 75, 
+        "entityEnglishId": "", 
+        "entityId": "Rappresentante Legale", 
+        "freebaseTypes": [
+          "/organization/organization"
+        ], 
+        "id": 2, 
+        "matchedText": "Rappresentante Legale", 
+        "matchingTokens": [
+          11, 
+          12
+        ], 
+        "relevanceScore": 0, 
+        "startingPos": 54, 
+        "type": [
+          "Company"
+        ], 
+        "wikiLink": ""
+      }
+    ]
+  }, 
+  "text": "In Italy the rector is the head of the university and Rappresentante Legale (Legal representative) of the university. He or she is elected by an electoral body."
+}

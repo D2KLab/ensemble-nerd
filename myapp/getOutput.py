@@ -56,12 +56,12 @@ features_paths_test.sort()
 for f in features_paths_train:
     filenamebase = f.split('/')[-1].split('.')[0]
     outputfilebase = output_folder_train + filenamebase
-    getAnnotationsOutput(f,text_folder_train+filenamebase+'.txt',model_name,model_name,inv_types_map,outputfilebase=outputfilebase,eval_flag=True)
+    getAnnotationsOutput(f,text_folder_train+filenamebase+'.txt',model_name_recognition=model_name,model_name_disambiguation=model_name,outputfilebase=outputfilebase,eval_flag=True)
 
 for f in features_paths_test:
     filenamebase = f.split('/')[-1].split('.')[0]
     outputfilebase = output_folder_test + filenamebase
-    getAnnotationsOutput(f,text_folder_test+filenamebase+'.txt',model_name,model_name,inv_types_map,outputfilebase=outputfilebase,eval_flag=True)
+    getAnnotationsOutput(f,text_folder_test+filenamebase+'.txt',model_name_recognition=model_name,model_name_disambiguation=model_name,outputfilebase=outputfilebase,eval_flag=True)
 
 
 
