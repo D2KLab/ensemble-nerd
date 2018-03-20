@@ -8,61 +8,53 @@ I built 5 ensemble models using the training set related to these standard golds
 * neel2015
 * french subtitles corpus
 
-## Getting Started
-To be able to run and try the ensemble method, some installations steps are required.
+## Web API
 
-### Python installation
-All the application is written using Python 3.6.2.
+The easiest way to tri and use the **ensemble nerd** is via a Web API.
 
-#### On Mac
-Download [Python 3.6.2](https://www.python.org/ftp/python/3.6.4/python-3.6.4-macosx10.6.pkg) and install it by using the Installer application.
+### Version information
+Version : 0.1.0
 
-#### On Windows
-Download [Python 3.6.2](https://www.python.org/ftp/python/3.6.4/python-3.6.4-macosx10.6.pkg) and install it by using the Windows Installer application. During this hase, pay attantion that Python is added to PATH, as in the image below
-![](https://i.stack.imgur.com/CCXQG.jpg)
+### URI scheme
+Host : TO_INSERT
+BasePath : TO_INSERT
+Schemes : HTTP
 
-#### On linux
-Open the Terminal and write these commands.
+### Paths
+
+#### POST /entities
+
+##### Description
+Extract, type and link entities from a document.
+
+##### Request
+
+The format in the HTTP header is respectively **text/plain** or **application/json**. In the second case, the iput json has to be like this:
 ```
-sudo apt-get update
-sudo apt-get install python3.6
-```
-
-### Pip installation
-After instally Python it's better to install PyPA, the recommended tool for installing Python packages. This step is not mandatory, but avoids to manually install each package required by the application. [Here](https://www.makeuseof.com/tag/install-pip-for-python/) is exaplined how to install PyPA for both Mac, Windows and Linux.
-
-### Packages installation
-
-```
-sudo apt-get update
-sudo apt-get install python3.6
+{
+  "text":<PLAIN_TEXT_TO_BE_ANNOTATED>
+}
 ```
 
-Dependencies:
-* Flask 0.12.2
-* Cython 0.27.1
-* fuzzywuzzy 0.15.1
-* h5py 2.7.1
-* Keras 2.0.8
-* langdetect 1.0.7
-* matplotlib 2.0.2
-* numpy 1.14.1
-* pandas 0.20.3
-* scikit-learn 0.19.0
-* scipy 0.19.1
-* seaborn 0.8
-* sklearn 0.0
-* spacy 1.9.0# 
-* igraph 0.1.11
-* cysignals 1.6.8
-* pyfasttext 0.4.4
+###### Parameters
+| lang|model_recognition|model_disambiguation| 
+|:-------------:|:-------------:|:-------------:|:-------------:| 
+|string containing ISO-639-2 language code|string containing model recognition name|string containing model disambiguation name|
 
-Open the cloned folder and run:
+###### Example
+A CURL POST request example is:
+```
+curl -X POST "TO_INSERT/entities?lang=en" -H "Content-type: application/json" -d '{"text":"In Italy the rector is the head of the university and Rappresentante Legale (Legal representative) of the university. He or she is elected by an electoral body."}'
+```
+It is identical to:
 
 ```
-pip3 install -r requirements.txt
-pip3 install pyfasttext==0.4.4
+curl -X POST "http://127.0.0.1:5000/entities?lang=en" -H "Content-type: text/plain" -d "In Italy the rector is the head of the university and Rappresentante Legale (Legal representative) of the university. He or she is elected by an electoral body."
 ```
 
-## Dowbload data
-To be able to use the application, let's download the *data.zip* zipped folder at [this link](https://fil.email/OV1IYgGb), unzip the folder and move it inside the *myapp* folder. Do not rename folders.
+
+##### Response
+
+The response format is **application/json**. An response example is showed [here](https://raw.githubusercontent.com/D2KLab/ensemble-nerd/master/myapp/response_samples/response1.json?token=ARExSVhO2fCJz8qLHTJLm6FT1uxRzVwqks5aumj8wA%3D%3D).
+
+
