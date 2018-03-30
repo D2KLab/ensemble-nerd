@@ -35,7 +35,7 @@ def getEntities():
             return 'No text passed'
 
     print(lang,model_disambiguation,model_recognition)
-            
+
 
     features_obj = getFeatures(text,lang=lang,model_setting=model_recognition)
     response_obj = getAnnotationsOutput(features_obj,text,model_name_recognition=model_recognition,model_name_disambiguation=model_disambiguation,return_flag=True)
@@ -46,4 +46,4 @@ def getEntities():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=8089)
