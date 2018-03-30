@@ -10,7 +10,7 @@ I built 5 ensemble models using the training set related to these standard golds
 
 ## Web API
 
-The easiest way to tri and use the **ensemble nerd** is via a Web API.
+The easiest way to try and use the **ensemble nerd** is via a Web API.
 
 ### Version information
 Version : 0.1.0
