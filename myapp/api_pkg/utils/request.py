@@ -119,7 +119,7 @@ def fromDbpediaToWikidataUri(db_uris,query=q_db_wd_sameAs):
     return mapping_db_en_wd
 
 def fromWikidataToDbpediaUri(wd_uris,query=q_wd_db_sameAs):
-    db_uris = list(db_uris)
+    wd_uris = list(wd_uris)
     queries = getQueries(wd_uris,query,offset=20)
     URLs = [getRequestURL(q,endpointURL='http://dbpedia.org/sparql') for q in queries]
     results = getQueriesResults(URLs)

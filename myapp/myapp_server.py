@@ -38,7 +38,7 @@ def getEntities():
 
 
     features_obj = getFeatures(text,lang=lang,model_setting=model_recognition)
-    response_obj = getAnnotationsOutput(features_obj,text,model_name_recognition=model_recognition,model_name_disambiguation=model_disambiguation,return_flag=True)
+    response_obj = getAnnotationsOutput(features_obj,text,model_name_recognition=model_recognition,model_name_disambiguation=model_disambiguation,return_flag=True,normalize_flag=True)
     response_obj["extractors_responses"] = features_obj["extractors_responses"]
 
 

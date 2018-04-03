@@ -10,7 +10,8 @@ from copy import deepcopy
 from functools import reduce
 import getopt
 import sys
-from api_pkg.utils.tokenization import splitInTokens
+from api_pkg.utils.tokenization import *
+from api_pkg.request import *
 import json
 
 
@@ -313,7 +314,7 @@ def formBRATandSave(entities,output_path):
     with open(output_path,'w+') as f_out:
         f_out.write('\n'.join(brat_lines))
 
-def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016',model_name_disambiguation='oke2016',outputfilebase=None,return_flag=False,eval_flag=False):
+def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016',model_name_disambiguation='oke2016',outputfilebase=None,return_flag=False,eval_flag=False,normalize_flag=True):
 
 
 
@@ -397,6 +398,9 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
         pd.DataFrame(records).to_csv(outputfilebase+'.csv',index=False)
 
 
+    wd_uris = ['http://www.wikidata.org/entity/'+uri for uri in set(pd.DataFrame(records)['uri'])]
+
+
 
 
 
@@ -405,7 +409,23 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
 
     #print('len entitities',len(entities))
 
-
+    if normalize_flag:
+        uri_dict = fromWikidataToDbpediaUri(wd_uris).set_index('wd_uri')['db_uri'].to_dict()
+        for i,e in enumerate(entities):
+            if 'uri' not in e:
+                entities[i]['Wikidata identifier'] = ''
+                entities[i]['Dbpedia link'] = ''
+            else:
+                wd_id = e['uri']
+                wd_uri ='http://www.wikidata.org/entity/'+wd_id
+                entities[i]['Wikidata identifier'] = wd_id
+                if wd_uri in uri_dict:
+                    entities[i]['Dbpedia link'] = uri_dict[wd_uri]
+                else:
+                    entities[i]['Dbpedia link'] = ''
+            del entities[i]['uri']
+            if 'type' not in e:
+                entities[i]['type'] = ''
 
 
 

@@ -5,6 +5,7 @@ from copy import copy
 from os import listdir
 from os.path import isfile, join
 from langdetect import detect
+from api_pkg.utils.tokenization import *
 import re
 from itertools import combinations
 import pickle
@@ -92,7 +93,7 @@ def worker_per_file(q,ground_truth,lang):
                     pickle.dump( features_dict_all, open( path, "wb" ) )
 
 
-for ground truth in ground_truths:
+for ground_truth in ground_truths:
     inputfolder_train = 'data/training_data/'+ground_truth+'/train/txt_files/'
     outputfolder_train = 'data/training_data/'+ground_truth+'/train/features_files/'
     inputfolder_test = 'data/training_data/'+ground_truth+'/test/txt_files/'
