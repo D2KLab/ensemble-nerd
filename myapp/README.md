@@ -58,7 +58,7 @@ pip3 install pyfasttext==0.4.4
 ```
 
 ## Download data
-To be able to use the application, download [data.zip](http://enerd.eurecom.fr/data/data.zip) and unzip it in this folder. Do not rename folders.
+To be able to use the application, download [data.zip](http://enerd.eurecom.fr/data/data.zip) (14GB) and unzip it in this folder. Do not rename folders.
 
 ## Set up server
 In order to locally set up the server, let's open the terminal, reach this folder and execute this command.
