@@ -12,6 +12,7 @@ import os.path
 from time import gmtime, strftime
 import numpy as np
 import getopt
+from api_pkg.utils.representation import *
 
 
 def getPathName(folder,original_filepath,ext='p'):
