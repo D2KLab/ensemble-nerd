@@ -16,6 +16,7 @@ import numpy as np
 import getopt
 
 from pyfasttext import FastText
+
 FASTTEXT_EN = FastText('data/fasttext_data/wiki.en.bin')
 FASTTEXT_FR1= FastText('data/fasttext_data/wiki.fr.bin')
 FASTTEXT_FR2= FastText('data/fasttext_data/my_corpus_model.bin')
@@ -53,8 +54,7 @@ def readTextsFromFolder(folder,outputfolder):
 
 args = sys.argv
 
-ground_truth = sys.argv[1]
-
+ground_truths = sys.argv[1].split(',')
 optlist, args = getopt.getopt(sys.argv[2:], '',['workers=','lang='
                                                 ])
 lang = None
@@ -79,73 +79,60 @@ def getFeaturesFasttext_(text,lang):
 
 
 def worker_per_file(q,ground_truth,lang):
-    flag = True
-    while flag:
-        text,path = q.get()
-        if text == -1:
-            flag = False
-        else:
-            if os.path.isfile(path):
-                print(path)
-                features_dict_all = pickle.load(open(path,'rb'))
-                features_dict_all['features']['fasttext'] = getFeaturesFasttext_(text,lang=lang)
-                pickle.dump( features_dict_all, open( path, "wb" ) )
+        flag = True
+        while flag:
+            text,path = q.get()
+            if text == -1:
+                flag = False
+            else:
+                if os.path.isfile(path):
+                    print(path)
+                    features_dict_all = pickle.load(open(path,'rb'))
+                    features_dict_all['features']['fasttext'] = getFeaturesFasttext_(text,lang=lang)
+                    pickle.dump( features_dict_all, open( path, "wb" ) )
+
+
+for ground truth in ground_truths:
+    inputfolder_train = 'data/training_data/'+ground_truth+'/train/txt_files/'
+    outputfolder_train = 'data/training_data/'+ground_truth+'/train/features_files/'
+    inputfolder_test = 'data/training_data/'+ground_truth+'/test/txt_files/'
+    outputfolder_test = 'data/training_data/'+ground_truth+'/test/features_files/'
 
 
 
-inputfolder_train = 'data/training_data/'+ground_truth+'/train/txt_files/'
-outputfolder_train = 'data/training_data/'+ground_truth+'/train/features_files/'
-inputfolder_test = 'data/training_data/'+ground_truth+'/test/txt_files/'
-outputfolder_test = 'data/training_data/'+ground_truth+'/test/features_files/'
+    text_path_list = readTextsFromFolder(inputfolder_train,outputfolder_train) + readTextsFromFolder(inputfolder_test,outputfolder_test)
 
-try:
-    os.makedirs(outputfolder_train)
-except:
-    pass
-
-try:
-    os.makedirs(outputfolder_test)
-except:
-    pass
+    try:
+        n_workers = n_workers
+    except:
+        n_workers = 1
 
 
-text_path_list = readTextsFromFolder(inputfolder_train,outputfolder_train) + readTextsFromFolder(inputfolder_test,outputfolder_test)
-
-try:
-    n_workers = n_workers
-except:
-    n_cpus = multiprocessing.cpu_count()
-
-    if n_cpus >= 8:
-        n_workers = int(multiprocessing.cpu_count() / 4) + 1
-    else:
-        n_workers = max([min([3,multiprocessing.cpu_count()-1]),1])
-
-print("n_workers",n_workers)
+    print("n_workers",n_workers)
 
 
-queue = multiprocessing.Queue()
-jobs = []
+    queue = multiprocessing.Queue()
+    jobs = []
 
 
-for i in range(n_workers):
-    p = multiprocessing.Process(target=worker_per_file, args=(queue,ground_truth,lang))
-    jobs.append(p)
+    for i in range(n_workers):
+        p = multiprocessing.Process(target=worker_per_file, args=(queue,ground_truth,lang))
+        jobs.append(p)
 
-for job in jobs:
-    job.start()
+    for job in jobs:
+        job.start()
 
 
 
-counter = 0
-for item in text_path_list:
-    queue.put(item)
+    counter = 0
+    for item in text_path_list:
+        queue.put(item)
             
 
-for i in range(n_workers):
-    queue.put((-1,-1))
+    for i in range(n_workers):
+        queue.put((-1,-1))
 
 
-for job in jobs:
-    job.join()
+    for job in jobs:
+        job.join()
 
