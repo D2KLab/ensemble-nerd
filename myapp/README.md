@@ -58,7 +58,7 @@ pip3 install pyfasttext==0.4.4
 ```
 
 ## Download data
-To be able to use the application, download the *data.zip* zipped folder at [this link](https://fil.email/OV1IYgGb), unzip and move it inside this folder. Do not rename folders.
+To be able to use the application, download [data.zip](http://enerd.eurecom.fr/data/data.zip) and unzip it in this folder. Do not rename folders.
 
 ## Set up server
 In order to locally set up the server, let's open the terminal, reach this folder and execute this command.
@@ -68,12 +68,12 @@ python3 myapp_server.py
 
 ## Create new models
 
-### Adding a new standard gold
-In order to create new ensemble models you have to train them using a standard gold.
-If you have to add a new standard gold with the name <NEW_STANDARD_GOLD_NAME>, you have to follow these steps:
-* let's create a new folder inside *data/training_data* folder called <NEW_STANDARD_GOLD_NAME>
-* let's enter in the new folder and create two subfolders named *test* and *train*
-* let's create inside both  *test* and *train* folders two subfolders called *csv_ground_truth* and *txt_files*
+### Adding a new gold standard
+In order to create new ensemble models you have to train them using a gold standard.
+If you have to add a new gold standard with the name <NEW_GOLD_STANDARD_NAME>, you have to follow these steps:
+* create a new folder inside *data/training_data* folder called <NEW_GOLD_STANDARD_NAME>
+* enter in the new folder and create two subfolders named *test* and *train*
+* create inside both  *test* and *train* folders two subfolders called *csv_ground_truth* and *txt_files*
 If the folders tree is correctly set up, it should appear as in the schema below:
 ```
 data
@@ -134,8 +134,8 @@ For example, let's assume that *document-1.txt* contains this text:
 | .|||0                   |
 
 ### Train new models
-Once you correctly parsed your new standard gold, let's go in *myapp* folder and run the following command to train the model.
+Once you correctly parsed your new gold standard, let's go in *myapp* folder and run the following command to train the model.
 ```
-python3 train_ensemble.py <NEW_STANDARD_GOLD_NAME> --lang <NEW_STANDARD_GOLD_LANGUAGE>
+python3 train_ensemble.py <NEW_GOLD_STANDARD_NAME> --lang <NEW_GOLD_STANDARD_LANGUAGE>
 ```
-Executing this command you'll also get the evaluation scores got by the ensemble mdoel for the new standard gold. It could also take hours depending on the number of documents presented in the ground turh.
+Executing this command you'll also get the evaluation scores got by the ensemble mdoel for the new gold standard. It could also take hours depending on the number of documents presented in the ground turh.
