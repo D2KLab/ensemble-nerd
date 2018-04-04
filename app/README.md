@@ -57,6 +57,8 @@ pip3 install -r requirements.txt
 pip3 install pyfasttext==0.4.4
 ```
 
+> Issues in installing [pyfasttext](https://github.com/vrasneur/pyfasttext/issues/24) ?
+
 ## Download data
 To be able to use the application, download [data.zip](http://enerd.eurecom.fr/data/data.zip) (14GB) and unzip it in this folder. Do not rename folders.
 

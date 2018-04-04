@@ -10,7 +10,7 @@ COPY ./app/. /
 CMD ["export", "LC_ALL=en_US.UTF-8"]
 CMD ["export", "LANG=en_US.UTF-8"]
 
-EXPOSE 80
+EXPOSE 8089
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh

@@ -79,7 +79,7 @@ Build
 
 Run
 
-    docker run -d -p 8089:80  -v /Users/pasquale/git/ensemble-nerd/app/data:/data --name enerd d2klab/ensemble-nerd
+    docker run -d -p 8089:8089  -v /Users/pasquale/git/ensemble-nerd/app/data:/data --name enerd d2klab/ensemble-nerd
 
 <!-- --restart=unless-stopped -->
 

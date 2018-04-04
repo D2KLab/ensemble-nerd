@@ -42,4 +42,4 @@ def getEntities():
 
 if __name__ == '__main__':
     print('starting server')
-    app.run()
+    app.run(host='localhost', port=8089)
