@@ -11,7 +11,7 @@ from functools import reduce
 import getopt
 import sys
 from api_pkg.utils.tokenization import *
-from api_pkg.request import *
+from api_pkg.utils.request import *
 import json
 
 
@@ -423,7 +423,7 @@ def getAnnotationsOutput(features_file,text_file,model_name_recognition='oke2016
                     entities[i]['Dbpedia link'] = uri_dict[wd_uri]
                 else:
                     entities[i]['Dbpedia link'] = ''
-            del entities[i]['uri']
+                del entities[i]['uri']
             if 'type' not in e:
                 entities[i]['type'] = ''
 

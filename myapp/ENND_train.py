@@ -108,6 +108,7 @@ for opt, arg in optlist:
             patience = int(arg)
 
 
+features = set(['type', 'score', 'entity', 'fasttext'])
 
 
 def get_similarities_dict(features_paths_train,features_paths_test):
