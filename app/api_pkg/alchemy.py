@@ -12,7 +12,7 @@ class ALCHEMY(object):
     def __init__(self):
         self.name = "alchemy"
         self.ontology = "alchemy"
-        credentials_obj = getCredentials(self.name)
+        credentials_obj = get_credentials(self.name)
         self.credentials = NaturalLanguageUnderstandingV1(
             username=credentials_obj["username"],
             password=credentials_obj["password"],

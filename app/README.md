@@ -63,7 +63,7 @@ To be able to use the application, download [data.zip](http://enerd.eurecom.fr/d
 ## Set up server
 In order to locally set up the server, let's open the terminal, reach this folder and execute this command.
 ```
-python3 myapp_server.py
+python3 server.py
 ```
 
 ## Create new models

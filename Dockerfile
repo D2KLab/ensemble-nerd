@@ -1,9 +1,17 @@
-FROM ensemble_nerd_docker
-RUN apt-get install -qy python3
-RUN apt-get install -qy python3-pip
-ADD . /myapp
-WORKDIR /myapp
-RUN pip3 install -r requirements.txt
-RUN pip3 install .
-EXPOSE 8000
-CMD myapp --port 8000
+FROM python
+
+ADD requirements.txt /requirements.txt
+WORKDIR /
+RUN pip install -r requirements.txt
+RUN pip install pyfasttext==0.4.4
+
+COPY ./app/. /
+
+CMD ["export", "LC_ALL=en_US.UTF-8"]
+CMD ["export", "LANG=en_US.UTF-8"]
+
+EXPOSE 80
+
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
+CMD [ "/run.sh" ]

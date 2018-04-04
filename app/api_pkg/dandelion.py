@@ -6,11 +6,12 @@ from api_pkg.utils import *
 import pandas as pd
 import numpy as np
 
+
 class DANDELION(object):
     def __init__(self, endpoint="api.dandelion.eu"):
         self.name = "dandelion"
         self.ontology = "wikidata"
-        self.token = getCredentials(self.name)
+        self.token = get_credentials(self.name)
         self.endpoint = endpoint
         self.lang = None
         self.annotations = None
@@ -18,11 +19,11 @@ class DANDELION(object):
         self.disambiguation = True
         self.recognition = False
 
-    def extract(self, text,extractors="entities,topics",lang="fr",min_confidence=0.0):
-        self.lang=lang
-        self.text=text
-        params = {"lang":lang,"text": text, "token":self.token,"min_confidence":str(min_confidence)}
-        response = requests.post('https://'+self.endpoint+'/datatxt/nex/v1', params=params)
+    def extract(self, text, extractors="entities,topics", lang="fr", min_confidence=0.0):
+        self.lang = lang
+        self.text = text
+        params = {"lang": lang, "text": text, "token": self.token, "min_confidence": str(min_confidence)}
+        response = requests.post('https://' + self.endpoint + '/datatxt/nex/v1', params=params)
         try:
             self.annotations = response.json()["annotations"]
         except:
@@ -32,7 +33,6 @@ class DANDELION(object):
                 print(respose.text)
                 raise Exception
 
-
     def parse(self):
         text = self.text
         annotations = self.annotations
@@ -40,14 +40,13 @@ class DANDELION(object):
         occurrences = list()
         for ann in annotations:
             occurrences.append({
-            	'chars':set([i for i in range(ann["start"],ann["end"])]),
-                "text":ann['spot'],
-                "confidence":ann["confidence"],
-                "uri":ann["uri"],
-                'type':np.NAN
+                'chars': set([i for i in range(ann["start"], ann["end"])]),
+                "text": ann['spot'],
+                "confidence": ann["confidence"],
+                "uri": ann["uri"],
+                'type': np.NAN
             })
             wiki_urls.append(ann["uri"])
-
 
         if len(occurrences) != 0:
             wiki_wd_dict = {}
@@ -61,12 +60,12 @@ class DANDELION(object):
             for uri in set(wiki_urls) - wiki_keys:
                 df = pd.read_csv(getWikiMissingInfo(uri))
                 if len(df) > 0:
-                    lines_df = df[df['predicate'] == 'http://schema.org/about'][['subject','object']].to_dict(orient='records')
+                    lines_df = df[df['predicate'] == 'http://schema.org/about'][['subject', 'object']].to_dict(
+                        orient='records')
                     for l in lines_df:
-                        s=l['subject']
-                        o=l['object'].split('/')[-1]
+                        s = l['subject']
+                        o = l['object'].split('/')[-1]
                         wiki_wd_dict[s] = o
-
 
             annotations = list()
             for occ in occurrences:
@@ -76,7 +75,7 @@ class DANDELION(object):
             cleaned_annotations = removeDoubleOccurences(annotations)
             if not doubleCheck:
                 raise Exception("Double check parse false")
-            if not consistencyText(cleaned_annotations,text):
+            if not consistencyText(cleaned_annotations, text):
                 raise Exception("The token start end char and the text don't correspond")
             self.annotations = cleaned_annotations
         else:
@@ -85,13 +84,12 @@ class DANDELION(object):
     def tokenize(self):
         text = self.text
         annotations = self.annotations
-        annotations = addMissingText(annotations,text)
+        annotations = addMissingText(annotations, text)
         annotations = fromAnnotationToTokens(annotations)
         self.annotations = annotations
 
-
-    def set_annotations(self,annotations):
-        self.annotations=annotations
+    def set_annotations(self, annotations):
+        self.annotations = annotations
 
     def get_annotations(self):
         return self.annotations
@@ -100,10 +98,7 @@ class DANDELION(object):
         return self.text
 
     def get_info(self):
-        return self.recognition,self.disambiguation
+        return self.recognition, self.disambiguation
 
     def clear_annotations(self):
         self.annotations = None
-
-
-

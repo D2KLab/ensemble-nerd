@@ -8,7 +8,7 @@ class OPENCALAIS(object):
     def __init__(self, endpoint="api.thomsonreuters.com"):
         self.name = "opencalais"
         self.ontology = "opencalais"
-        self.access_token = getCredentials(self.name)
+        self.access_token = get_credentials(self.name)
         self.endpoint = endpoint
         self.lang = None
         self.annotations = None

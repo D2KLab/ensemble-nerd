@@ -9,7 +9,7 @@ class MEANINGCLOUD(object):
     def __init__(self, endpoint="api.meaningcloud.com"):
         self.name = "meaning_cloud"
         self.ontology = "meaning_cloud"
-        self.api_key = getCredentials(self.name)
+        self.api_key = get_credentials(self.name)
         self.endpoint = endpoint
         self.lang = None
         self.annotations = None

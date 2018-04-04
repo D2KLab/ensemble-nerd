@@ -5,10 +5,12 @@ from api_pkg.utils.tokenization import *
 from api_pkg.utils import *
 import unicodedata
 
+
 def removeAccents(s):
     s = ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
-    s = s.replace('–','-')
+    s = s.replace('–', '-')
     return s
+
 
 class ADEL(object):
     def __init__(self, endpoint="adel.eurecom.fr"):
@@ -21,10 +23,9 @@ class ADEL(object):
         self.disambiguation = False
         self.recognition = True
 
-
-    def extract(self, text,extractors="entities,topics",lang="fr",min_confidence=0.0,setting='default'):
-        self.lang=lang
-        self.text=text
+    def extract(self, text, extractors="entities,topics", lang="fr", min_confidence=0.0, setting='default'):
+        self.lang = lang
+        self.text = text
         headers = {
             'accept': 'text/plain;charset=utf-8',
             'content-type': 'application/json;charset=utf-8',
@@ -34,13 +35,14 @@ class ADEL(object):
             ('lang', lang)
         )
         text = removeAccents(text)
-        if setting in ['oke2016','oke2015']:
+        if setting in ['oke2016', 'oke2015']:
             self.ontology = 'adelOKE'
         if setting in ['neel2015']:
             self.ontology = 'adelNEEL'
-        data = '{ "content": "'+text.replace('"','\\"')+'", "input": "raw", "output": "brat"}'
+        data = '{ "content": "' + text.replace('"', '\\"') + '", "input": "raw", "output": "brat"}'
         try:
-            response = requests.post('http://'+self.endpoint+'/v1/extract',headers=headers, params=params,data=data)
+            response = requests.post('http://' + self.endpoint + '/v1/extract', headers=headers, params=params,
+                                     data=data)
             self.annotations = response.text
         except:
             self.annotations = ''
@@ -65,10 +67,10 @@ class ADEL(object):
                     end_char = int(split_2[-1])
                     category = split_2[0].split('#')[-1]
                     annotations_dict[annotation_key] = {
-                        "chars":set([i for i in range(start_char,end_char)]),
-                        "type":category,
-                        "text":annotation_text,
-                        "uri":np.NAN
+                        "chars": set([i for i in range(start_char, end_char)]),
+                        "type": category,
+                        "text": annotation_text,
+                        "uri": np.NAN
                     }
         if len(annotations_dict) == 0:
             print(lines)
@@ -78,19 +80,19 @@ class ADEL(object):
             cleaned_annotations = removeDoubleOccurences(annotations)
             if not doubleCheck:
                 raise Exception("Double check parse false")
-            if not consistencyText(cleaned_annotations,text):
-                cleaned_annotations = createConsistencyText(cleaned_annotations,text)
+            if not consistencyText(cleaned_annotations, text):
+                cleaned_annotations = createConsistencyText(cleaned_annotations, text)
             self.annotations = cleaned_annotations
 
     def tokenize(self):
         text = self.text
         annotations = self.annotations
-        annotations = addMissingText(annotations,text)
+        annotations = addMissingText(annotations, text)
         annotations = fromAnnotationToTokens(annotations)
         self.annotations = annotations
 
-    def set_annotations(self,annotations):
-        self.annotations=annotations
+    def set_annotations(self, annotations):
+        self.annotations = annotations
 
     def get_annotations(self):
         return self.annotations
@@ -99,8 +101,7 @@ class ADEL(object):
         return self.text
 
     def get_info(self):
-        return self.recognition,self.disambiguation
+        return self.recognition, self.disambiguation
 
     def clear_annotations(self):
         self.annotations = None
-

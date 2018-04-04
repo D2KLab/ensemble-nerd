@@ -12,7 +12,7 @@ class TEXTRAZOR(object):
         self.name = "textrazor"
         self.ontology_uri = "wikidata"
         self.ontology_type = "dbpedia"
-        self.api_key = getCredentials(self.name)
+        self.api_key = get_credentials(self.name)
         self.lang = None
         self.text = None
         self.annotations = None

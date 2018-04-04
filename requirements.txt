@@ -17,3 +17,4 @@ watson-developer-cloud==1.1.1
 python-igraph
 cysignals==1.6.8
 Flask==0.12.2
+python-Levenshtein
