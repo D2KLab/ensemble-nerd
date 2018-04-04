@@ -7,6 +7,7 @@ from api_pkg.utils.tokenization import *
 from api_pkg import dandelion,dbspotlight,opencalais,babelfy,adel,meaning_cloud,alchemy,textrazor
 from itertools import combinations
 from langdetect import detect
+import time
 
 
 
