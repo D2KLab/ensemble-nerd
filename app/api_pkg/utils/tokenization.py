@@ -7,7 +7,7 @@ def isGoodChar(c):
     return c.isalpha() or c.isdigit()
 
 
-splitting_chars = list()
+splitting_chars = ['\xa0']
 for ch in string.printable:
     if not isGoodChar(ch):
         splitting_chars.append(ch)
