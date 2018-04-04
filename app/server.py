@@ -28,6 +28,8 @@ def getEntities():
             text = request_obj['text']
         else:
             return 'No text passed'
+        
+    print(text)
 
     print(lang, model_disambiguation, model_recognition)
 
