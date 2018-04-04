@@ -2,20 +2,24 @@ import string
 import numpy as np
 import re
 
+
 def isGoodChar(c):
     return c.isalpha() or c.isdigit()
+
 
 splitting_chars = list()
 for ch in string.printable:
     if not isGoodChar(ch):
         splitting_chars.append(ch)
 
+
 def formatText(string):
     string = string.lower()
     for ch in splitting_chars:
         if ch != ' ':
-            string = string.replace(ch,' '+ch+' ')
-    return string.replace('  ',' ')
+            string = string.replace(ch, ' ' + ch + ' ')
+    return string.replace('  ', ' ')
+
 
 def cleanTuple(original_tuples):
     final_tuples = list()
@@ -24,9 +28,9 @@ def cleanTuple(original_tuples):
         start = t[1]
         end = t[2]
         regexPattern = '|'.join(map(re.escape, splitting_chars))
-        final_strings=[r for r in re.split(regexPattern, string) if bool(r)]
+        final_strings = [r for r in re.split(regexPattern, string) if bool(r)]
         starts = []
-        for s in final_strings: 
+        for s in final_strings:
             possible_starts = [m.start() for m in re.finditer(s, string)]
             for p in possible_starts:
                 if p not in starts:
@@ -41,39 +45,39 @@ def cleanTuple(original_tuples):
     return final_tuples
 
 
-
 def splitInTokens(string):
-    s=string.lower()
-    final_tuples = ([(m.group(0), m.start(),m.start()+len(m.group(0))-1)
-                    for m in re.finditer(re.compile('[^'+''.join(splitting_chars)+']+')
-                                         , s)]
+    s = string.lower()
+    final_tuples = ([(m.group(0), m.start(), m.start() + len(m.group(0)) - 1)
+                     for m in re.finditer(re.compile('[^' + ''.join(splitting_chars) + ']+')
+                                          , s)]
                     +
-                    [(m.group(0), m.start(),m.start()+len(m.group(0))-1)
-                    for m in re.finditer(re.compile('['+''.join(splitting_chars[:-6])+']')
-                                         , s)]
-    )
-    final_tuples.sort(key=lambda x:x[1])
+                    [(m.group(0), m.start(), m.start() + len(m.group(0)) - 1)
+                     for m in re.finditer(re.compile('[' + ''.join(splitting_chars[:-6]) + ']')
+                                          , s)]
+                    )
+    final_tuples.sort(key=lambda x: x[1])
     return final_tuples
 
 
-def addMissingText(annotations,text):
-    starts_ends = [(-2,-1)]+[(record['start'],record['end']) for record in annotations]+[(len(text),len(text))]
-    starts_ends.sort(key=lambda x:x[0])
+def addMissingText(annotations, text):
+    starts_ends = [(-2, -1)] + [(record['start'], record['end']) for record in annotations] + [(len(text), len(text))]
+    starts_ends.sort(key=lambda x: x[0])
     for i in range(len(starts_ends[:-1])):
-        start = starts_ends[i][-1]+1
-        end = starts_ends[i+1][0]
+        start = starts_ends[i][-1] + 1
+        end = starts_ends[i + 1][0]
         if end > start:
             ann = {
-                    'text':text[start:end],
-                    'start':start,
-                    'end':end-1,
-                    'type':np.NAN,
-                    'uri':np.NAN,
-                    'continue':0
-                }
+                'text': text[start:end],
+                'start': start,
+                'end': end - 1,
+                'type': np.NAN,
+                'uri': np.NAN,
+                'continue': 0
+            }
             annotations.append(ann)
-    annotations.sort(key=lambda x:x['start'])
+    annotations.sort(key=lambda x: x['start'])
     return annotations
+
 
 def fromAnnotationToTokens(annotations):
     annotations_new = list()
@@ -96,11 +100,11 @@ def fromAnnotationToTokens(annotations):
             else:
                 continue_flag = 1
             annotations_new.append({
-                'text':word_tuple[0],
-                'type':type_,
-                'uri':uri,
-                'relevance':relevance,
-                'confidence':confidence,
-                'continue':continue_flag
+                'text': word_tuple[0],
+                'type': type_,
+                'uri': uri,
+                'relevance': relevance,
+                'confidence': confidence,
+                'continue': continue_flag
             })
     return annotations_new

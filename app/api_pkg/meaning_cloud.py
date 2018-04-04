@@ -17,9 +17,9 @@ class MEANINGCLOUD(object):
         self.disambiguation = False
         self.recognition = True
 
-    def extract(self, text,extractors="entities,topics",lang="fr",min_confidence=0.0):
-        self.lang=lang
-        self.text=text
+    def extract(self, text, extractors="entities,topics", lang="fr", min_confidence=0.0):
+        self.lang = lang
+        self.text = text
         params = (
             ('key', self.api_key),
             ('of', 'json'),
@@ -39,34 +39,32 @@ class MEANINGCLOUD(object):
             if type_ != 'Top':
                 for inst in ann["variant_list"]:
                     occurrences.append({
-                        "text":ann['form'],
-                        'chars':set([i for i in range(int(inst['inip']),int(inst['endp'])+1)]),
-                        "type":ann["sementity"]['type'].split('>')[-1],
-                        "relevance":int(ann['relevance'])/100,
-                        "uri":np.NAN
+                        "text": ann['form'],
+                        'chars': set([i for i in range(int(inst['inip']), int(inst['endp']) + 1)]),
+                        "type": ann["sementity"]['type'].split('>')[-1],
+                        "relevance": int(ann['relevance']) / 100,
+                        "uri": np.NAN
                     })
         if len(occurrences) != 0:
             cleaned_annotations = removeDoubleOccurences(occurrences)
-            cleaned_annotations = addMissingChars(cleaned_annotations,text)
+            cleaned_annotations = addMissingChars(cleaned_annotations, text)
             if not doubleCheck:
                 raise Exception("Double check parse false")
-            if not consistencyText(cleaned_annotations,text):
-                cleaned_annotations = createConsistencyText(cleaned_annotations,text)
+            if not consistencyText(cleaned_annotations, text):
+                cleaned_annotations = createConsistencyText(cleaned_annotations, text)
             self.annotations = cleaned_annotations
         else:
             self.annotations = []
 
-
     def tokenize(self):
         text = self.text
         annotations = self.annotations
-        annotations = addMissingText(annotations,text)
+        annotations = addMissingText(annotations, text)
         annotations = fromAnnotationToTokens(annotations)
         self.annotations = annotations
 
-
-    def set_annotations(self,annotations):
-        self.annotations=annotations
+    def set_annotations(self, annotations):
+        self.annotations = annotations
 
     def get_annotations(self):
         return self.annotations
@@ -75,7 +73,7 @@ class MEANINGCLOUD(object):
         return self.text
 
     def get_info(self):
-        return self.recognition,self.disambiguation
+        return self.recognition, self.disambiguation
 
     def clear_annotations(self):
         self.annotations = None

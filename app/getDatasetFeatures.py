@@ -1,17 +1,12 @@
-import os
+import getopt
 import multiprocessing
+import os
+import os.path
+import pickle
 import sys
-from copy import copy
 from os import listdir
 from os.path import isfile, join
-import re
-from itertools import combinations
-import pickle
-import time
-import os.path
-from time import gmtime, strftime
-import numpy as np
-import getopt
+
 from api_pkg.utils.representation import *
 
 

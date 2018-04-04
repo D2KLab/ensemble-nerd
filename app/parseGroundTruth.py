@@ -1,13 +1,7 @@
-from IPython.display import display, HTML
-from api_pkg.utils.tokenization import splitInTokens,formatText,fromAnnotationToTokens,,addMissingText
-from api_pkg.utils.parsing import removeDoubleOccurences,consistencyText
-from api_pkg.request import getRequestResult
-import json
-from copy import deepcopy
-import numpy as np
-import pickle
 import os
+
 import pandas as pd
+from api_pkg.utils.tokenization import fromAnnotationToTokens, , addMissingText
 
 ground_truth = sys.argv[1]
 base_path = 'data/training_data/+'+ground_truth+'/'
