@@ -12,7 +12,6 @@ from sklearn.metrics import f1_score,recall_score,precision_score
 from api_pkg.utils.tokenization import splitInTokens
 from functools import reduce
 from IPython.display import display, HTML
-from bratutils import agreement as a
 sns.set_style("whitegrid", {"axes.grid": False})
 
 try:
@@ -112,7 +111,7 @@ def getExtractorsTypesLists(features_paths,extractors_type,base):
     extractors_type_lists = dict()
     for ext in extractors_type:
         extractors_type_lists[ext] = []
-        if ext == 'adel' and base in ['oke2016','aida']:
+        if ext == 'adel' and base in ['oke2016','aida','oke2015']:
             col = 'type_list'
         else:
             col = 'type_list_normalized'

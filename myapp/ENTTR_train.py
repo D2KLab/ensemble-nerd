@@ -105,8 +105,6 @@ except:
     pass
 
 def built_X_sample(features_obj,features,extractors):
-    print(features)
-    print(extractors)
     for f in features:
         if type(features_obj[f]) == dict:
             for extractor in features_obj[f]:
