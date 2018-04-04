@@ -20,7 +20,7 @@ def getEntities():
         'model_disambiguation', default='oke2016', type=str)
 
     if request.headers['Content-Type'] == 'text/plain':
-        text = request.data.decode('utf-8')
+        text = request.data.decode('utf-8').replace('\xa0',' ')
 
     if request.headers['Content-Type'] == 'application/json':
         request_obj = request.json
