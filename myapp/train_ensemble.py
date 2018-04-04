@@ -14,7 +14,7 @@ except:
 cmd_train_ENTTR = ['ENTTR_train.py', base]
 cmd_train_ENND = ['ENND_train.py', base]
 cmd_output = ['getOutput.py',base,base]
-cmd_evaluate = ['evaluate_dataset.py',base]
+cmd_evaluate = ['evaluateDatasetResults.py',base]
 
 commands = [cmd_features,cmd_train_ENTTR,cmd_train_ENND,cmd_output,cmd_evaluate]
 
