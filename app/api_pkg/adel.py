@@ -46,6 +46,7 @@ class ADEL(object):
             self.annotations = response.text
         except:
             self.annotations = ''
+            raise Exception
 
     def parse(self):
         text = self.text
