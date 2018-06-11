@@ -132,7 +132,8 @@ OpenCalais    & \cmark  & \xmark \\ \hline
 
 Each extractor produces a list of named entities as response for a specific input text. From this output, we generate 4 different kinds of feature: surface form features, type features, entity features, score features.
 
-\textbf{Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{n}}$ as the real-valued vector associated to a specific word/token $n$:
+\textbf{Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. We consider as tokens also the stop words.
+The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{n}}$ as the real-valued vector associated to a specific token $n$:
 
 \begin{equation}
 \vec{s^{n}} = \left [  \vec{s^{n}_p}|\vec{s^{n}_c} \right ], dim(\vec{s^{n}})=400
@@ -147,7 +148,7 @@ $\vec{s^{n}_p}$, $dim(\vec{s^{n}_p})=300$, consists in the token embedding compu
 
 $\vec{s^{n}_c}$, $dim(\vec{s^{n}_c})=100$, is the token embedding computed when training \textit{fastText} directly on a particular textual corpus -- i.e. the one for which we want to perform the NERD tasks. This means that $\vec{s^{n}_c}$ does not vary depending on the language but on the gold standard itself.
 
-\textbf{Type features}. Each extractor $e \in T$ has its own type ontology $o$ which is a taxonomy of a maximum depth $L$. In the following, we consider a simple example of an ontology $o$ with just a 2 levels hierarchy (\figref{fig:ontology}):
+\textbf{Type features}. Each extractor $e \in T$ has its own type taxonomy $o$ which is a taxonomy of a maximum depth $L$. In the following, we consider a simple example of an taxonomy $o$ with just a 2 levels hierarchy (\figref{fig:ontology}):
 \begin{enumerate}
 \begin{item}
 Level 1 includes three types: PLACE, ORGANIZATION and PERSON.
@@ -160,7 +161,7 @@ Level 2 includes four types: CITY and MOUNTAIN (subtypes of PLACE) and ACTOR and
 \begin{figure}
 	\centering
     \includegraphics[scale=0.23]{onotlogy.png}
- 	\caption{Example of type ontology for a generic extractor.}
+ 	\caption{Example of type taxonomy for a generic extractor.}
  	\label{fig:ontology}
 \end{figure}
 
@@ -182,11 +183,11 @@ PLACE           & 100   & CITY      & 0100  \\ \hline
 \caption{Representation of types through one-hot encoding.}
 \end{table}
 
-For a generic type $\tau$ in the last layer (e.g. ACTOR), the features vector $v_{\tau}$ consists in the concatenation of the one-hot representation of each type founded on the walk from the root to the leaf associate to $\tau$. The features vector for ACTOR is therefore  \texttt{0010001}, where the first three values \texttt{001} derive from PERSON and the last four values \texttt{0001} derive from ACTOR. Hence, we can state that $dim(v_{\tau})= \sum_{i}^{L}C_i$. If the extractor $e \in T$ returns a type that is not the last level in the hierarchy, as PERSON, we fill the missing vector positions with \texttt{0}. The features vector $v_{PERSON}$ associated to PERSON is thus \texttt{0010000}. This mechanism is extensible to any ontology. However the $dim(v_{\tau})$ is different for each extractor, depending on the ontology that it uses. 
+For a generic type $\tau$ in the last layer (e.g. ACTOR), the features vector $v_{\tau}$ consists in the concatenation of the one-hot representation of each type founded on the walk from the root to the leaf associate to $\tau$. The features vector for ACTOR is therefore  \texttt{0010001}, where the first three values \texttt{001} derive from PERSON and the last four values \texttt{0001} derive from ACTOR. Hence, we can state that $dim(v_{\tau})= \sum_{i}^{L}C_i$. If the extractor $e \in T$ returns a type that is not the last level in the hierarchy, as PERSON, we fill the missing vector positions with \texttt{0}. The features vector $v_{PERSON}$ associated to PERSON is thus \texttt{0010000}. This mechanism is extensible to any taxonomy. However the $dim(v_{\tau})$ is different for each extractor, depending on the taxonomy that it uses. 
 
 This procedure can be extended also to extractors that do not perform NER. A generic extractor $e$, where $e \in U \wedge e \not\in T$, returns a link for each entity. Following the interlinks between KBs, we can always obtain an entity in Wikidata. The type of the entity would be the class of this entity in Wikidata, which is the value of the property \textit{instance of (P31)}.\footnote{\label{P31} \url{https://www.wikidata.org/wiki/Property:P31}}. Those types are also represented through one-hot encoding.
 
-For a \textbf{typed named entity} $w^t$ with the format \texttt{(surface form, type)}, the type feature vector $\vec{t^{w^{t}}_{e}}$ is computed for the extractor $e$ where $e \in U \lor e \in T$. $dim(\vec{t^{w^{t}}_{e}})$ varies accordingly to the considered extractor. In fact, we get a real-value numerical type representation without a type alignment phase. For this reason, the number of dimensions that forms the type features vector depends on the the number of types in the extractor ontology.
+For a \textbf{typed named entity} $w^t$ with the format \texttt{(surface form, type)}, the type feature vector $\vec{t^{w^{t}}_{e}}$ is computed for the extractor $e$ where $e \in U \lor e \in T$. $dim(\vec{t^{w^{t}}_{e}})$ varies accordingly to the considered extractor. In fact, we get a real-value numerical type representation without a type alignment phase. For this reason, the number of dimensions that forms the type features vector depends on the the number of types in the extractor taxonomy.
 
 \textbf{Entity features}. These features represent the similarity between two Wikidata entities $w_1$ and $w_2$, as a vector of 5 dimensions. The first four dimensions correspond to \textbf{semantic knowledge}:
 \begin{enumerate}
@@ -202,7 +203,7 @@ where $d_{Lev}(l_{w_1},l_{w_2})$ is the \textbf{Levenshtein distance} between th
 the third dimension represents the \textbf{TF-IDF Cosine Similarity} between the abstracts associated to the compared entities. We can express this value as $S_{TfIdf}(w_1,w_2)$. This dimension represents a textual knowledge as in~\cite{CollaborativeKnowledgeBaseEmbeddingforRecommenderSystems};
 \end{item}
 \begin{item}
-the fourth dimension value indicates if the compared entities share the same \textit{occupation (P106)}.\footnote{\url{https://www.wikidata.org/wiki/Property:P106}} We can express this value as $S_{occ}(w_1,w_2)$. This property is specific for entities of type PERSON but it greatly helps in the disambiguation of people with similar names but different professions. $S_{occ}(w_1,w_2)$ is set to 1 when the two entities referred to people that have the same profession, and 0 otherwise.
+the fourth dimension value indicates if the compared entities share the same \textit{occupation (P106)}.\footnote{\url{https://www.wikidata.org/wiki/Property:P106}} We can express this value as $S_{occ}(w_1,w_2)$. This property is specific for entities of type PERSON: this wikidata class has no other subclasses, contrary to the other types. For this reason this similarity dimension greatly helps in the disambiguation of people with similar names but different professions.  $S_{occ}(w_1,w_2)$ is set to 1 when the two entities referred to people that have the same profession, and 0 otherwise.
 \end{item}
 \end{enumerate}
 
@@ -247,12 +248,12 @@ We define $\vec{k^{w^{k}}_{e}}$ as the the features vector representing the scor
 
 \section{Ensemble NERD: ENNTR and ENND}
 \label{sec:experiment}
-Our experimental ensemble method relies on two Neural Networks that receive in input the features described in the previous Section. We respectively name them with the acronyms \textbf{Ensemble Neural Network for Type Recognition (ENNTR)} and \textbf{Ensemble Neural Network for Disambiguation (ENND)}.
+Our experimental ensemble method relies on two Neural Networks that receive in input the features described in the previous Section. We respectively name them with the acronyms \textbf{Ensemble Neural Network for Type Recognition (ENNTR)} and \textbf{Ensemble Neural Network for Disambiguation (ENND)}. For both networks, the hyper parameter optimization was done using Grid Search.
 
 \subsubsection{Ensemble Neural Network for Type Recognition.}
 We consider a generic ground truth $GT$ formed by $N$ textual fragments (e.g. sentences), such that we can split each fragment in tokens. $X_i$ is the ordered list of tokens for fragment $i$. Concatenating the lists $X_i$, we get a list $X$, that is the ordered list of tokens for all corpus. We call $x$ a generic token in $X$. 
 
-$o_{GT}$ is the ontology associated to $GT$ and $card(o_{GT})$ represents the number of different types presented in $o_{GT}$ (its cardinality). $GT$ associates a type in $o_{Gt}$ to each token $x$. We identify the neural network target as $Y_t$. The number of samples in $Y_t$ is equal to the total number of tokens: $dim(Y_t)=dim(X)$. The neural network goal is to assign the right type to each token and its architecture is represented in Figure~\ref{fig:architecture_type_recognition}. 
+$o_{GT}$ is the taxonomy associated to $GT$ and $card(o_{GT})$ represents the number of different types presented in $o_{GT}$ (its cardinality). $GT$ associates a type in $o_{Gt}$ to each token $x$. We identify the neural network target as $Y_t$. The number of samples in $Y_t$ is equal to the total number of tokens: $dim(Y_t)=dim(X)$. The neural network goal is to assign the right type to each token and its architecture is represented in Figure~\ref{fig:architecture_type_recognition}. 
 
 \begin{figure}
 	\centering
@@ -304,7 +305,7 @@ $$ \vec{u^{x}} = [S(u^{x}_{1},u^{x}_{1}),S(u^{x}_{1},u^{x}_{2}),...,S(u^{x}_{P},
 
 The layers $I_U$ receive $\vec{u^{x}}$ as input. The input layers $I_S$ receive the surface features. A Fasttext features vector $\vec{s^{x}}$ corresponds to each token $x$. Each input layer $I_k$ is fully connected with a layer $M_k$. $M_k$, as $O$, is formed by $H$ neurons, where $H$ is the number of types in the ground truth. The activation of $M_k$ neurons is linear.
 
-In this first part of the network, each $I_k$ (formed by a different number of neurons depending on the related features vector) is mapped on $H$ neurons in $M_k$. This avoids that the neural network privileges features vectors with higher dimension -- it happens directly concatenating different features vectors. This part of the network can be considered as an \textbf{alignment block} since it automatically map the types between the extractors and the ground truth ontology. This is pretty similar to the \textit{Inductive Entity Typing Alignment} work described in~\cite{nerd4}, with the difference that the alignment step is learned by a fully connected layer. Differently from previous works \cite{fox1,fox2}, the alignment and recognition phases are not anymore separated, because they are part of the same network. 
+In this first part of the network, each $I_k$ (formed by a different number of neurons depending on the related features vector) is mapped on $H$ neurons in $M_k$. This avoids that the neural network privileges features vectors with higher dimension -- it happens directly concatenating different features vectors. This part of the network can be considered as an \textbf{alignment block} since it automatically map the types between the extractors and the ground truth taxonomy. This is pretty similar to the \textit{Inductive Entity Typing Alignment} work described in~\cite{nerd4}, with the difference that the alignment step is learned by a fully connected layer. Differently from previous works \cite{fox1,fox2}, the alignment and recognition phases are not anymore separated, because they are part of the same network. 
 
 The last part of the network is the \textbf{ensemble block}. $M_k$ layers are concatenated forming a new layer $R$. $\left\vert{o_{GT}}\right\vert$ is the number of types in the ground truth, $\left\vert{I}\right\vert$ the number of input layers and $\left\vert{P}\right\vert$ the number of neurons in $R$:
  $$\left\vert{P}\right\vert =  \left\vert{o_{GT}}\right\vert \cdot \left\vert{I}\right\vert$$
