@@ -448,48 +448,52 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
 
 \begin{table}
       \centering
-      \setlength{\tabcolsep}{12pt}
-        \begin{tabular}{c|c|c|c|c|c|c|}
+      \setlength{\tabcolsep}{5pt}
+        \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
           \multicolumn{3}{|c|}{OKE2016} & 
-          \multicolumn{3}{|c|}{NEXGEN CORPUS} \\
+          \multicolumn{3}{|c|}{NEXGEN} &
+          \multicolumn{3}{|c|}{AIDA}\\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
-           & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
-            \textbf{babelfy}         & 0,54  & 0,64   & 0,47  & 0,51  & 0,51 & 0,51  \\ \hline
-            \textbf{dandelion}       & 0,59   & 0,77   & 0,48 & 0,34  & 0,50  & 0,26 \\ \hline
-            \textbf{dbspotlight}     & 0,39   & 0,53   & 0,30 & 0,38   & 0,29  & 0,54 \\ \hline
-            \textbf{textrazor}       & 0,53   & 0,78   & 0,40 & 0,61  & 0,55  & 0,69 \\ \hline \hline
-            \textbf{ensemble}        & \textbf{0,66}   & \textbf{0,88}   & \textbf{0,52}  & \textbf{0,69} & \textbf{0,7}  & \textbf{0,64} \\ \hline
-            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,80}   & \textbf{0,47}  & \textbf{0,59} & \textbf{0,60}  & \textbf{0,58} \\ \hline
-            \textbf{ensemble ($I=I_T$)}        & \textbf{0,41}   & \textbf{0,45}   & \textbf{0,38}  & \textbf{0,42} & \textbf{0,47}  & \textbf{0,38} \\ \hline
+           & \textbf{fsc} & \textbf{pre} & \textbf{rec} & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
+            \textbf{babelfy}         & 0,54  & 0,64   & 0,47  & 0,51  & 0,51 & 0,51 & 0,66 & 0,70 & 0,62  \\ \hline
+            \textbf{dandelion}       & 0,59   & 0,77   & 0,48 & 0,34  & 0,50  & 0,26 & 0,45   & 0,66   & 0,34\\ \hline
+            \textbf{dbspotlight}     & 0,39   & 0,53   & 0,30 & 0,38   & 0,29  & 0,54 & 0,47	& 0,65 & 0,36 \\ \hline
+            \textbf{textrazor}       & 0,53   & 0,78   & 0,40 & 0,61  & 0,55  & 0,69 & 0,62 & 0.57 & 0.53\\ \hline \hline
+            \textbf{ensemble}        & \textbf{0,66}   & \textbf{0,88}   & \textbf{0,52}  & \textbf{0,69} & \textbf{0,70}  & \textbf{0,64} & \textbf{0,68}   & \textbf{0,79}   & \textbf{0,60} \\ \hline
+            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,80}   & \textbf{0,47}  & \textbf{0,59} & \textbf{0,60}  & \textbf{0,58} 
+            & \textbf{0,55}   & \textbf{0,60}   & \textbf{0,50} \\ \hline
+            \textbf{ensemble ($I=I_T$)}        & \textbf{0,41}   & \textbf{0,45}   & \textbf{0,38}  & \textbf{0,42} & \textbf{0,47}  & \textbf{0,38} 
+            & \textbf{0,48}   & \textbf{0,52}   & \textbf{0,45} \\ \hline
         \end{tabular}
-    \caption{GERBIL Micro scores on both OKE2016 and NexGenTV corpus}
+    \caption{GERBIL Micro scores on OKE2016,NexGenTV and AIDA/CoNLL corpus}
     \label{linkscores}
 \end{table}
 
-%%% ADDED
+
 
 \begin{table}
       \centering
-      \setlength{\tabcolsep}{12pt}
-        \begin{tabular}{c|c|c|c|c|c|c|}
+      \setlength{\tabcolsep}{5pt}
+        \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
           \multicolumn{3}{|c|}{OKE2016} & 
-          \multicolumn{3}{|c|}{NEXGEN CORPUS} \\
+          \multicolumn{3}{|c|}{NEXGEN} &
+          \multicolumn{3}{|c|}{AIDA}\\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
-           & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
-            \textbf{babelfy}         & 0,54  & 0,65   & 0,47  & 0,51  & 0,52 & 0,51  \\ \hline
-            \textbf{dandelion}       & 0,59   & 0,76   & 0,49 & 0,35  & 0,50  & 0,27 \\ \hline
-            \textbf{dbspotlight}     & 0,39   & 0,52   & 0,32 & 0,38   & 0,29  & 0,55  \\ \hline
-            \textbf{textrazor}       & 0,54   & 0,77   & 0,42 & 0,61  & 0,54  & 0,71 \\ \hline \hline
-            \textbf{ensemble}        & \textbf{0,65}   & \textbf{0,86}   & \textbf{0,53}  & \textbf{0,67} & \textbf{0,69}  & \textbf{0,64} \\ \hline
-            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,77}   & \textbf{0,48}  & \textbf{0,59} & \textbf{0,59}  & \textbf{0,59} \\ \hline
-            \textbf{ensemble ($I=I_T$)}        & \textbf{0,42} & \textbf{0,44}  & \textbf{0,40}  & \textbf{0,41} & \textbf{0,42}  & \textbf{0,40} \\ \hline
-            
+           & \textbf{fsc} & \textbf{pre} & \textbf{rec} & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
+            \textbf{babelfy}         & 0,54  & 0,65   & 0,47  & 0,51  & 0,52 & 0,51 & 0,60  & 0,65 & 0,57 \\ \hline
+            \textbf{dandelion}       & 0,59   & 0,76   & 0,49 & 0,35  & 0,50  & 0,27 & 0,43  & 0,52 & 0,37 \\ \hline
+            \textbf{dbspotlight}     & 0,39   & 0,52   & 0,32 & 0,38   & 0,29  & 0,55  & 0,45  & 0,63 & 0,37\\ \hline
+            \textbf{textrazor}       & 0,54   & 0,77   & 0,42 & 0,61  & 0,54  & 0,71 & 0,57  & 0,78 & 0,45\\ \hline \hline
+            \textbf{ensemble}        & \textbf{0,65}   & \textbf{0,86}   & \textbf{0,53}  & \textbf{0,67} & \textbf{0,69}  & \textbf{0,64} & \textbf{0,68}   & \textbf{0,76}   & \textbf{0,61} \\ \hline
+            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,77}   & \textbf{0,48}  & \textbf{0,59} & \textbf{0,59}  & \textbf{0,59} & \textbf{0,55}   & \textbf{0,59}   & \textbf{0,51}\\ \hline
+            \textbf{ensemble ($I=I_T$)}        & \textbf{0,42} & \textbf{0,44}  & \textbf{0,40}  & \textbf{0,41} & \textbf{0,42}  & \textbf{0,40} & \textbf{0,49}   & \textbf{0,51}   & \textbf{0,47}\\ \hline
         \end{tabular}
-    \caption{GERBIL Macro scores on both OKE2016 and NexGenTV corpus}
-    \label{linkscoresmacro}
+    \caption{GERBIL Macro scores on OKE2016,NexGenTV and AIDA/CoNLL corpus}
+    \label{linkscoresmacroo}
 \end{table}
+
 
 
 \begin{table}
@@ -515,7 +519,37 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
 \end{table}
 
 
+
+
  
+
+
+
+
+ \begin{table}
+      \centering
+      \setlength{\tabcolsep}{12pt}
+        \begin{tabular}{c|c|c|c|c|c|c|}
+          \multicolumn{1}{c}{ } &
+          \multicolumn{3}{|c|}{Micro scores} & 
+          \multicolumn{3}{|c|}{Macro scores} \\
+           \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
+           & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
+            \textbf{agdistis}         & 0,58  & 0,58   & 0,58  &  0,59  & 0,59   & 0,59  \\ \hline
+            \textbf{aida}         & 0,00  & 0,00   & 0,00  &   0,00  & 0,00   & 0,00   \\ \hline
+            \textbf{dexter}         & 0,51  & 0,76   & 0,38  &   0,47  & 0,75   & 0,36   \\ \hline
+            \textbf{fox}         & 0,57  & 0,63   & 0,51  & 0,56  & 0,64   & 0,51   \\ \hline
+            \textbf{freme ner}         & 0,38  & 0,62   & 0,27  &   0,29  & 0,30   & 0,27   \\ \hline
+            \textbf{kea}          & 0,00  & 0,00   & 0,00  &   0,00  & 0,00   & 0,00  \\ \hline
+            \textbf{pboh}         & 0,00  & 0,00   & 0,00  &   0,00  & 0,00   & 0,00   \\ \hline \hline
+            \textbf{ensemble}        & \textbf{0,68}   & \textbf{0,79}   & \textbf{0,60} & \textbf{0,68}   & \textbf{0,76}   & \textbf{0,61}  \\ \hline
+        \end{tabular}
+    \caption{GERBIL scores on AIDA-CoNLL}
+    \label{linkscoresgerbilaida}
+\end{table}
+
+
+
 
 %%% ADDED
 
