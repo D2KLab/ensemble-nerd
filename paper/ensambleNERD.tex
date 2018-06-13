@@ -295,7 +295,7 @@ $$\vec{d_k} = [0,...,0], dim(d_k) == dim(\vec{v^{w^{k}}_{e}})$$
 
 $w^u$ is a named entity with the format (surface form, link). Tokenizing $w^{u}$, we get a list of tokens $X_{w^{u}}$. $u^{w^{u}}_{e}$ is the Wikidata entity returned by the extractor $e$, where $e \in U$, for the entity $w^u$. $u^{x}_{e}$ is the Wikidata entity returned by the extractor $e$, where $e \in U$, for the token $x$. 
 
-\begin{equation} \label{eq:score_feat}
+\begin{equation} \label{eq:score_feat1}
 u^{x}_{e} = \left\{\begin{matrix} 
 u^{w^{u}}_{e} & if \: x \in X_{w^{u}}\\
 NAN & if \: x \notin X_{w^{u}}
@@ -360,7 +360,7 @@ The loss function used to train the network is the Mean Square Error. The neural
 We experiment also cross-entropy rather than MSE but the training time was the same and the quality of the result was slightly lower.
 
 
-$o_{x,j}$ corresponds to the output value of the input sample associated to the candidate entity $j$ for token $x$. Multiple candidates $C_x$ are associated to each token $x$. We select the candidate associated with the highest value $o_{x,max}$ among all output values $\left \{  o_{x,1},o_{x,2},...,o_{x,card(C_x)} \right \}$. Defining a threshold $\tau_d$, if $o_{x,max} > \tau_d$, we can select as predicted entity for token $x$ the one related to $o_{x,max}$. Otherwise, we connsider that the token $x$ is not part of a named entity. This process of \textbf{candidate selection} returns the list $z_{p}$ of predicted Wikidata entities identifiers at token level. In a final step, sequences of tokens which belong to the same Wikidata entity identifiers are merged to a single entity. $A_{p}$ represents the predicted corpus of annotated fragments as $A_{p}$.
+$o_{x,j}$ corresponds to the output value of the input sample associated to the candidate entity $j$ for token $x$. Multiple candidates $C_x$ are associated to each token $x$. We select the candidate associated with the highest value $o_{x,max}$ among all output values $\left \{  o_{x,1},o_{x,2},...,o_{x,card(C_x)} \right \}$. Defining a threshold $\tau_d$, if $o_{x,max} > \tau_d$, we can select as predicted entity for token $x$ the one related to $o_{x,max}$. Otherwise, we connsider that the token $x$ is not part of a named entity. This process of \textbf{candidate selection} returns the list $z_{p}$ of predicted Wikidata entities identifiers at token level. In a final step, sequences of tokens which belong to the same Wikidata entity identifiers are merged to a single entity. $A_{p}$ represents the predicted corpus of annotated fragments as $A_{p}$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  5. Experiment and Evaluation  %%%
@@ -369,11 +369,16 @@ $o_{x,j}$ corresponds to the output value of the input sample associated to the 
 \section{Experiment and Evaluation}
 \label{sec:evaluation}
 We developed an implementation of the two neural networks using Keras.\footnote{The source code is available at \url{https://github.com/D2KLab/ensemble-nerd}, together with the documentation for accessing the live demo at \url{http://enerd.eurecom.fr}}
-In order to make our approach comparable with the state of the art, our experiment evaluation relies on a well-known corpus and metrics, which have been already applied to related work. We alo evaluate our approach on another gold standard that we provide to the community.
+In order to make our approach comparable with the state of the art, our experiment evaluation relies on a well-known corpus and metrics, which have been already applied to related work. We also evaluate our approach on another gold standard that we provide to the community.
 \begin{itemize}
- \item \textbf{OKE2016}: annotated corpus of English textual resources, created for the 2016 OKE Challenge. The types set coincides with the one of OKE2015.
- \item \textbf{NexGenTv corpus}:\footnote{\url{http://enerd.eurecom.fr/data/training_data/nexgen_tv_corpus/}} this dataset is formed by 77 annotated fragments of transcripts from politician television debates in French.\footnote{The debates are in the context of the 2017 French presidential election.} Each fragment lasts in average 2 minutes. The corpus is split in 64 training and 13 test samples. The list of types includes 13 different labels.\footnote{PERSON, ORGANIZATION, GEOGRAPHICAL POINT, TIME, TIME INTERVAL, NUMBER, QUANTITY, OCCURRENCE, EVENT, INTELLECTUAL WORK, ROLE, GROUP OF HUMANS and OCCUPATION.} 
+ \item \textbf{OKE2016}: annotated corpus of English textual resources, created for the 2016 OKE Challenge. The types set contains 4 different tags. \footnote{PERSON, ORGANIZATION, PLACE, ROLE.}. This ground truth disambiguates the entities using Dbpedia KB.
+ \item \textbf{NexGenTv corpus}:\footnote{\url{http://enerd.eurecom.fr/data/training_data/nexgen_tv_corpus/}} this dataset is formed by 77 annotated fragments of transcripts from politician television debates in French.\footnote{The debates are in the context of the 2017 French presidential election.} Each fragment lasts in average 2 minutes. The corpus is split in 64 training and 13 test samples. The list of types includes 13 different labels.\footnote{PERSON, ORGANIZATION, GEOGRAPHICAL POINT, TIME, TIME INTERVAL, NUMBER, QUANTITY, OCCURRENCE, EVENT, INTELLECTUAL WORK, ROLE, GROUP OF HUMANS and OCCUPATION.} This ground truth links the entities to Wikidata KB.
+ 
+  \item \textbf{AIDA/CoNLL}: it is in English and contains assignments of entities to the mentions of named entities and their links to Dbpedia KB. This dataset doesn't infer types for NEs. For this reason, we only use it for the NED evaluation. 
 \end{itemize}
+
+The ensemble technique we use for scoring is averaging, but not boosting or bagging.
+
 
 \subsubsection{Type recognition}
 For each gold standard $GT$, two different kinds of score are computed.
@@ -446,11 +451,11 @@ The computed scores for OKE2016 and NexGenTv corpus are reported in \tabref{type
 
 
 
-In order to identify the most influencing features in the obtained results, ENTTR has been sequentially adapted and retrained in order to receive in input only a specific kind of features, i.e. only $I_T$, $I_K$, $I_U$ or $I_S$. The tokens based scores for these new trained networks reveals that the type features \textit{$I_T$} are the only ones that, used alone as input, continue to make ENTRR outperforming single extractors. The other feature kinds, while having a lower impact, are still improving the final results when combined in the ensemble.
+In order to identify the most influencing features in the obtained results, ENTTR has been sequentially adapted and retrained in order to receive in input only a specific kind of features, i.e. only $I_T$, $I_K$, $I_U$ or $I_S$. The tokens based scores for these new trained networks reveals that the type features \textit{$I_T$} are the only ones that, used alone as input, continue to make ENTRR outperforming single extractors. It happens because we are performing type recognition and these are the input layers related to the type features. The other feature kinds, while having a lower impact, are still improving the final results when combined in the ensemble.
 
 \subsubsection{Entity Linking}
 
-We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GERBIL framework\footnote{GERBIL is a general Linked Data benchmarking that offers an easy-to-use web-based platform for the agile comparison of annotators using multiple datasets and uniform measuring approaches.} and in particular micro scores for the experiment type ``Disambiguate to Knowledge Base'' (D2KB). The computed scores are reported in \tabref{linkscores} and \tabref{linkscoresmacro}; the ensemble method outperforms again the single extractors that it integrates for all metrics.
+We evaluate the entity linking for both OKE2016,NexGenTv corpus and AIDA/CoNLL using the GERBIL framework\footnote{GERBIL is a general Linked Data benchmarking that offers an easy-to-use web-based platform for the agile comparison of annotators using multiple datasets and uniform measuring approaches.} and in particular micro and macro scores for the experiment type ``Disambiguate to Knowledge Base'' (D2KB). The computed scores are reported in \tabref{linkscoresmicro} and \tabref{linkscoresmacro}; the ensemble method outperforms again the single extractors that it integrates for all metrics. In addition, they show the ensemble results using only a specific kind of features, in order to show the feature role. In such case, the most influential features are the entity ones \textit{$I_U$}. However, the impact of type features \textit{$I_T$} is still crucial because its absence makes really lower the improvement of the ensemble method with respect to a single extractor prediction.
 
 
 \begin{table}
@@ -474,7 +479,7 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
             & \textbf{0,48}   & \textbf{0,52}   & \textbf{0,45} \\ \hline
         \end{tabular}
     \caption{GERBIL Micro scores on OKE2016,NexGenTV and AIDA/CoNLL corpus}
-    \label{linkscores}
+    \label{linkscoresmicro}
 \end{table}
 
 
@@ -498,10 +503,12 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
             \textbf{ensemble ($I=I_T$)}        & \textbf{0,42} & \textbf{0,44}  & \textbf{0,40}  & \textbf{0,41} & \textbf{0,42}  & \textbf{0,40} & \textbf{0,49}   & \textbf{0,51}   & \textbf{0,47}\\ \hline
         \end{tabular}
     \caption{GERBIL Macro scores on OKE2016,NexGenTV and AIDA/CoNLL corpus}
-    \label{linkscoresmacroo}
+    \label{linkscoresmacro}
 \end{table}
 
 
+\tabref{linkscoresgerbiloke2016} and \tabref{linkscoresgerbilaida} compare the NED extractors presented on GERBIL with our ensemble. For OKE2016, PBOH is the only tool which obtains a better score However this extractors reaches very low scores for AIDA/CoNLL, while our ensemble still continues to have good performances.
+For the NexGenTV dataset, we cannot compare the other NERD extractors because the majority of them perform NED only for the English language.
 
 \begin{table}
       \centering
@@ -524,14 +531,6 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
     \caption{GERBIL scores on OKE2016}
     \label{linkscoresgerbiloke2016}
 \end{table}
-
-
-
-
- 
-
-
-
 
  \begin{table}
       \centering
@@ -561,16 +560,13 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
 
 
 
-
-For entity disambiguation, the most influential features are the entity ones \textit{$I_U$}. However, the impact of type features \textit{$I_T$} is still crucial because its absence makes really lower the improvement of the ensemble method with respect to a single extractor prediction.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  6. Conclusion and Future Work  %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion and Future Work}
 \label{sec:conclusion}
-In this paper, we presented two multilingual ensemble methods which combine the responses of web services (extractors) performing Named Entity Recognition and Disambiguation. The method relies on two Neural Networks that outperform the single extractors respectively in NER and NED tasks. Furthermore, the NER network allows to avoid the manually type alignment between the type ontologies of each extractor and the ground truth ontology. We demonstrated the importance of the features generation for the success of these ensemble methods. In terms of NER, the type features play most of the work in the ensemble. For the NED task, while entity features have the greater impact, only a combination with type features really improve the effectiveness of the ensemble method with respect to single extractor predictions.
+In this paper, we presented two multilingual ensemble methods which combine the responses of web services (extractors) performing Named Entity Recognition and Disambiguation. The method relies on two Neural Networks that outperform the single extractors respectively in NER and NED tasks. Furthermore, the NER network allows to avoid the manually type alignment between the type taxonomies of each extractor and the ground truth taxonomy. We demonstrated the importance of the features generation for the success of these ensemble methods. In terms of NER, the type features play most of the work in the ensemble. For the NED task, while entity features have the greater impact, only a combination with type features really improve the effectiveness of the ensemble method with respect to single extractor predictions.
 
 As future work, we plan to enhance the input feature set with Part of Speech tags features that would be assigned to each token. We also aim
 to vary the neural network architecture, and in particular, we are planning to replace the dense layer receiving the surface features with a BiLSTM, which would also take in consideration the context in which the tokens are sequentially appearing. Finally, all the neural networks models have been trained when all extractors APIs were reachable. However, it happens that some APIs can be out of service for some reasons (e.g. maintenance). In those cases, even if it would continue working, the results of our ensemble method may be influenced by those partially invalid inputs. A training that involves some samples which simulates the extractors failures would make the network models more robust to API failures.
