@@ -132,11 +132,11 @@ OpenCalais    & \cmark  & \xmark \\ \hline
 
 Each extractor produces a list of named entities as response for a specific input text. From this output, we generate 4 different kinds of feature: surface form features, type features, entity features, score features.
 
-\textbf{Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. We consider as tokens also the stop words.
-The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{n}}$ as the real-valued vector associated to a specific token $n$:
+\textbf{Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. We consider also the stop words, assigning also to them a real-value vectorial representation.
+The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{x}}$ as the real-valued vector associated to a specific token $x$:
 
 \begin{equation}
-\vec{s^{n}} = \left [  \vec{s^{n}_p}|\vec{s^{n}_c} \right ], dim(\vec{s^{n}})=400
+\vec{s^{x}} = \left [  \vec{s^{x}_p}|\vec{s^{x}_c} \right ], dim(\vec{s^{x}})=400
 \end{equation}
 where: 
 \begin{itemize}
@@ -144,9 +144,9 @@ where:
     \item[] $dim$ is the dimension of the vector
 \end{itemize}
 
-$\vec{s^{n}_p}$, $dim(\vec{s^{n}_p})=300$, consists in the token embedding computed using the Wikipedia pre-trained \textit{fastText} models released by the authors. The model changes depending on the language used in the text, since all localised Wikipedia have been used to train language specific models.
+$\vec{s^{x}_p}$, $dim(\vec{s^{x}_p})=300$, consists in the token embedding computed using the Wikipedia pre-trained \textit{fastText} models released by the authors. The model changes depending on the language used in the text, since all localised Wikipedia have been used to train language specific models.
 
-$\vec{s^{n}_c}$, $dim(\vec{s^{n}_c})=100$, is the token embedding computed when training \textit{fastText} directly on a particular textual corpus -- i.e. the one for which we want to perform the NERD tasks. This means that $\vec{s^{n}_c}$ does not vary depending on the language but on the gold standard itself.
+$\vec{s^{x}_c}$, $dim(\vec{s^{x}_c})=100$, is the token embedding computed when training \textit{fastText} directly on a particular textual corpus -- i.e. the one for which we want to perform the NERD tasks. This means that $\vec{s^{x}_c}$ does not vary depending on the language but on the gold standard itself.
 
 \textbf{Type features}. Each extractor $e \in T$ has its own type taxonomy $o$ which is a taxonomy of a maximum depth $L$. In the following, we consider a simple example of an taxonomy $o$ with just a 2 levels hierarchy (\figref{fig:ontology}):
 \begin{enumerate}
@@ -185,9 +185,9 @@ PLACE           & 100   & CITY      & 0100  \\ \hline
 
 For a generic type $\tau$ in the last layer (e.g. ACTOR), the features vector $v_{\tau}$ consists in the concatenation of the one-hot representation of each type founded on the walk from the root to the leaf associate to $\tau$. The features vector for ACTOR is therefore  \texttt{0010001}, where the first three values \texttt{001} derive from PERSON and the last four values \texttt{0001} derive from ACTOR. Hence, we can state that $dim(v_{\tau})= \sum_{i}^{L}C_i$. If the extractor $e \in T$ returns a type that is not the last level in the hierarchy, as PERSON, we fill the missing vector positions with \texttt{0}. The features vector $v_{PERSON}$ associated to PERSON is thus \texttt{0010000}. This mechanism is extensible to any taxonomy. However the $dim(v_{\tau})$ is different for each extractor, depending on the taxonomy that it uses. 
 
-This procedure can be extended also to extractors that do not perform NER. A generic extractor $e$, where $e \in U \wedge e \not\in T$, returns a link for each entity. Following the interlinks between KBs, we can always obtain an entity in Wikidata. The type of the entity would be the class of this entity in Wikidata, which is the value of the property \textit{instance of (P31)}.\footnote{\label{P31} \url{https://www.wikidata.org/wiki/Property:P31}}. Those types are also represented through one-hot encoding.
+This procedure can be extended also to extractors that do not perform NER. A generic extractor $e$, where $e \in U \wedge e \not\in T$, returns a link for each entity. Following the interlinks between KBs, we can always obtain an entity in Wikidata. The type of the entity would be the class of this entity in Wikidata, which is the value of the property \textit{instance of (P31)}.\footnote{\label{P31} \url{https://www.wikidata.org/wiki/Property:P31}}. Entities might possess multiple types and for this reason they are represented through K-hot encoding.
 
-For a \textbf{typed named entity} $w^t$ with the format \texttt{(surface form, type)}, the type feature vector $\vec{t^{w^{t}}_{e}}$ is computed for the extractor $e$ where $e \in U \lor e \in T$. $dim(\vec{t^{w^{t}}_{e}})$ varies accordingly to the considered extractor. In fact, we get a real-value numerical type representation without a type alignment phase. For this reason, the number of dimensions that forms the type features vector depends on the the number of types in the extractor taxonomy.
+For a \textbf{typed named entity} $w^t$ with the format \texttt{(surface form, type)}, the type feature vector $\vec{v^{w^t}_{e}}$ is computed for the extractor $e$ where $e \in U \lor e \in T$. $dim(\vec{v^{w^t}_{e}})$ varies accordingly to the considered extractor. In fact, we get a real-value numerical type representation without a type alignment phase. For this reason, the number of dimensions that forms the type features vector depends on the the number of types in the extractor taxonomy.
 
 \textbf{Entity features}. These features represent the similarity between two Wikidata entities $w_1$ and $w_2$, as a vector of 5 dimensions. The first four dimensions correspond to \textbf{semantic knowledge}:
 \begin{enumerate}
@@ -240,7 +240,7 @@ Babelfy      & DBpedia     & 100\%    \\ \hline
 \end{table}
 
 \textbf{Score features}. Some extractors return scores representing either the confidence or the saliency for each named entity. For each extractor $e \in K$, $w^k$ is a \textbf{score named entity} with the format \texttt{(surface form, scores)}. 
-We define $\vec{k^{w^{k}}_{e}}$ as the the features vector representing the scores for the \textbf{score named entity} $w^k$ and the extractor $e$ where $e \in K$.  $dim(\vec{k^{w^{k}}_{e}})$ depends on the considered extractors, and more precisely, on the number of scores returned by a specific extractor.
+We define $\vec{v^{w^{k}}_{e}}$ as the the features vector representing the scores for the \textbf{score named entity} $w^k$ and the extractor $e$ where $e \in K$.  $dim(\vec{v^{w^{k}}_{e}})$ depends on the considered extractors, and more precisely, on the number of scores returned by a specific extractor.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  4. Ensemble NERD: ENNTR and ENND  %%%
@@ -248,7 +248,10 @@ We define $\vec{k^{w^{k}}_{e}}$ as the the features vector representing the scor
 
 \section{Ensemble NERD: ENNTR and ENND}
 \label{sec:experiment}
-Our experimental ensemble method relies on two Neural Networks that receive in input the features described in the previous Section. We respectively name them with the acronyms \textbf{Ensemble Neural Network for Type Recognition (ENNTR)} and \textbf{Ensemble Neural Network for Disambiguation (ENND)}. For both networks, the hyper parameter optimization was done using Grid Search.
+Our experimental ensemble method relies on two Neural Networks that receive in input the features described in the previous Section. We respectively name them with the acronyms \textbf{Ensemble Neural Network for Type Recognition (ENNTR)} and \textbf{Ensemble Neural Network for Disambiguation (ENND)}. 
+The networks architectures and their multiple input layers are specific for NERD ensemble task: we started our experiment trying LSTM and BiLSTM with only one input from which all features enter. The training was really slow and  the choice of one input caused that the network easely overfits and that the feature vectors with low dimensionality were not considered as the ones with higher dimensionality. 
+For both networks, the hyper parameter optimization was done using Grid Search.
+
 
 \subsubsection{Ensemble Neural Network for Type Recognition.}
 We consider a generic ground truth $GT$ formed by $N$ textual fragments (e.g. sentences), such that we can split each fragment in tokens. $X_i$ is the ordered list of tokens for fragment $i$. Concatenating the lists $X_i$, we get a list $X$, that is the ordered list of tokens for all corpus. We call $x$ a generic token in $X$. 
@@ -269,26 +272,26 @@ ENNTR presents many input layers. Using the same notation used in \secref{sec:st
 $$I = I_T \cup I_K \cup I_U \cup I_S$$
 $$\left\vert{I}\right\vert= \left\vert{I_T}\right\vert + \left\vert{I_K}\right\vert + \left\vert{I_U}\right\vert + \left\vert{I_S}\right\vert  = \left\vert{T \cup U}\right\vert + \left\vert{K}\right\vert + 1 + 1$$
 
-Each input sample that enters into $I_T$  is represented by a features vector $\vec{t^{x}_{e}}$, which is the features vector representing the type of the token $x$ for the extractor $e$ where $e \in U \lor e \in T$. In \secref{sec:study}, we defined $\vec{t^{w}_{e}}$ as the features vector representing the type for the named entity $w$ and the extractor $e$ where $e \in U \lor e \in T$. We focus on how to get $\vec{t^{x}_{e}}$ from $\vec{t^{w^{t}}_{e}}$. At each type named entity $w^{t}$ corresponds one or more tokens. Tokenizing $w^{t}$, we get a list of tokens $X_{w^{t}}$. Defining a default vector $\vec{d_t}$, such that $dim(\vec{d_t}) = dim(\vec{t^{w^{t}}_{e}})$  and containing only \texttt{0} values, we can get $\vec{t^{x}_{e}}$ as:
+Each input sample that enters into $I_T$  is represented by a features vector $\vec{t^{x}_{e}}$, which is the features vector representing the type of the token $x$ for the extractor $e$ where $e \in U \lor e \in T$. In \secref{sec:study}, we defined $\vec{v^{w^t}_{e}}$ as the features vector representing the type for the named entity $w$ and the extractor $e$ where $e \in U \lor e \in T$. We focus on how to get $\vec{t^{x}_{e}}$ from $\vec{v^{w^t}_{e}}$. At each type named entity $w^{t}$ corresponds one or more tokens. Tokenizing $w^{t}$, we get a list of tokens $X_{w^{t}}$. Defining a default vector $\vec{d_t}$, such that $dim(\vec{d_t}) = dim(\vec{v^{w^t}_{e}})$  and containing only \texttt{0} values, we can get $\vec{t^{x}_{e}}$ as:
 
 \begin{equation} \label{eq:type_feat}
 \vec{t^{x}_{e}} = \left\{\begin{matrix} 
-\vec{t^{w^{t}}_{e}} & if \: x \in X_{w^{t}}\\
+\vec{v^{w^t}_{e}} & if \: x \in X_{w^{t}}\\
 \vec{d_t} & if \: x \notin X_{w^{t}}
 \end{matrix}\right.
 \end{equation}
 
 Each input sample that enters into $I_K$  is represented by a features vector $\vec{k^{x}_{e}}$, which is the features vector representing the scores related to the token $x$ for the extractor $e$ where $e \in K$. Tokenizing $w^{k}$, we get a list of tokens $X_{w^{k}}$.
-As for the type input layers, it is possible to derive $\vec{k^{x}_{e}}$ from $\vec{k^{w^{k}}_{e}}$:
+As for the type input layers, it is possible to derive $\vec{k^{x}_{e}}$ from $\vec{v^{w^k}_{e}}$:
 
 \begin{equation} \label{eq:score_feat}
 \vec{k^{x}_{e}} = \left\{\begin{matrix} 
-\vec{k^{w^{k}}_{e}} & if \: x \in X_{w^{k}}\\
+\vec{v^{w^k}_{e}} & if \: x \in X_{w^{k}}\\
 \vec{d_k} & if \: x \notin X_{w^{k}}
 \end{matrix}\right.
 \end{equation}
 
-$$\vec{d_k} = [0,...,0], dim(d_k) == dim(\vec{k^{w^{k}}_{e}})$$
+$$\vec{d_k} = [0,...,0], dim(d_k) == dim(\vec{v^{w^{k}}_{e}})$$
 
 $w^u$ is a named entity with the format (surface form, link). Tokenizing $w^{u}$, we get a list of tokens $X_{w^{u}}$. $u^{w^{u}}_{e}$ is the Wikidata entity returned by the extractor $e$, where $e \in U$, for the entity $w^u$. $u^{x}_{e}$ is the Wikidata entity returned by the extractor $e$, where $e \in U$, for the token $x$. 
 
@@ -339,7 +342,7 @@ The entity similarity features enter through $I_U$. We define $c_{x,j}$  as a ca
 $$\vec{u_{x,j}} = [\vec{S}(c_{x,j},u^{x}_{1})|\vec{S}(c_{x,j},u^{x}_{2})|...|\vec{S}(c_{x,j},u^{x}_{R})] \: where \: R = card(U)$$
 $$dim(\vec{u_{x,j}}) = dim(\vec{S(w_1,w_2)}) \cdot  card(U) $$
 
-The input layers $I_T$ receives the features representing the type information. As for type recognition, for each $e \in U \lor e \in T$, the feature vector $\vec{t^{w^{t}}_{e}}$ represents the type for the named entity $w$, while $\vec{t^{x}_{e}}$ represents the type for the token $x$. $\vec{t^{x}_{e}}$ can be computed from $\vec{t^{w}_{e}}$ as described in \ref{eq:type_feat}. Considering that for each token $x$, there are multiple entity candidates, the vector $\vec{t^{w}_{e}}$ corresponding to the token $x$ is assigned to each candidate $p_{x,j}$, from which $p_{x,j}$ derives.
+The input layers $I_T$ receives the features representing the type information. As for type recognition, for each $e \in U \lor e \in T$, the feature vector $\vec{t^{w}_{e}}$ represents the type for the named entity $w$, while $\vec{t^{x}_{e}}$ represents the type for the token $x$. $\vec{t^{x}_{e}}$ can be computed from $\vec{t^{w}_{e}}$ as described in \ref{eq:type_feat}. Considering that for each token $x$, there are multiple entity candidates, the vector $\vec{t^{w}_{e}}$ corresponding to the token $x$ is assigned to each candidate $p_{x,j}$, from which $p_{x,j}$ derives.
 
 $I_T$ layers are fully connected to the layers $M_k$ as in ENNTR. $M_k$, as $O$, is formed by $H$ neurons. However, in this case, $H$ is no more the number of types in the ground truth, but it is an hyper-parameter. During our experiments, we set it to 4. As for ENNTR, the $M_k$ activation is linear.
  
@@ -351,7 +354,11 @@ x & if \: x > 0\\
 \alpha e^{x} - \alpha & if \: x \leq 0 
 \end{matrix}\right.$$
 
+We cannot simply use \textbf{Softmax} since the number of candidates vary according to the token (and so is the number of neurons in the output layer).
+
 The loss function used to train the network is the Mean Square Error. The neural network goal is to determine the probability that an entity candidate is right. In fact, for each sample, we get an output value that corresponds to this probability.
+We experiment also cross-entropy rather than MSE but the training time was the same and the quality of the result was slightly lower.
+
 
 $o_{x,j}$ corresponds to the output value of the input sample associated to the candidate entity $j$ for token $x$. Multiple candidates $C_x$ are associated to each token $x$. We select the candidate associated with the highest value $o_{x,max}$ among all output values $\left \{  o_{x,1},o_{x,2},...,o_{x,card(C_x)} \right \}$. Defining a threshold $\tau_d$, if $o_{x,max} > \tau_d$, we can select as predicted entity for token $x$ the one related to $o_{x,max}$. Otherwise, we connsider that the token $x$ is not part of a named entity. This process of \textbf{candidate selection} returns the list $z_{p}$ of predicted Wikidata entities identifiers at token level. In a final step, sequences of tokens which belong to the same Wikidata entity identifiers are merged to a single entity. $A_{p}$ represents the predicted corpus of annotated fragments as $A_{p}$.
 
@@ -540,14 +547,13 @@ We evaluate the entity linking for both OKE2016 and NexGenTv corpus using the GE
             \textbf{dexter}         & 0,51  & 0,76   & 0,38  &   0,47  & 0,75   & 0,36   \\ \hline
             \textbf{fox}         & 0,57  & 0,63   & 0,51  & 0,56  & 0,64   & 0,51   \\ \hline
             \textbf{freme ner}         & 0,38  & 0,62   & 0,27  &   0,29  & 0,30   & 0,27   \\ \hline
-            \textbf{kea}          & 0,00  & 0,00   & 0,00  &   0,00  & 0,00   & 0,00  \\ \hline
+            \textbf{kea}          & 0,60  & 0,65   & 0,56  &   0,59  & 0,63   & 0,56  \\ \hline
             \textbf{pboh}         & 0,00  & 0,00   & 0,00  &   0,00  & 0,00   & 0,00   \\ \hline \hline
             \textbf{ensemble}        & \textbf{0,68}   & \textbf{0,79}   & \textbf{0,60} & \textbf{0,68}   & \textbf{0,76}   & \textbf{0,61}  \\ \hline
         \end{tabular}
     \caption{GERBIL scores on AIDA-CoNLL}
     \label{linkscoresgerbilaida}
 \end{table}
-
 
 
 
@@ -568,6 +574,7 @@ In this paper, we presented two multilingual ensemble methods which combine the 
 
 As future work, we plan to enhance the input feature set with Part of Speech tags features that would be assigned to each token. We also aim
 to vary the neural network architecture, and in particular, we are planning to replace the dense layer receiving the surface features with a BiLSTM, which would also take in consideration the context in which the tokens are sequentially appearing. Finally, all the neural networks models have been trained when all extractors APIs were reachable. However, it happens that some APIs can be out of service for some reasons (e.g. maintenance). In those cases, even if it would continue working, the results of our ensemble method may be influenced by those partially invalid inputs. A training that involves some samples which simulates the extractors failures would make the network models more robust to API failures.
+In ENND, for the activation function, we choose SeLU but a better analysis is planned.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  Acknowledgements  %%%
