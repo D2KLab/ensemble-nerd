@@ -144,5 +144,6 @@ Executing this command you'll also get the evaluation scores got by the ensemble
 
 
 ### Evaluation
-To be able to compare our method againist the state of art NED extractors, you can click on the following link to see the D2KB scores for two datasets: * [OKE2016](http://gerbil.aksw.org/gerbil/experiment?id=201806180000)
+To be able to compare our method againist the state of art NED extractors, you can click on the following link to see the D2KB scores for two datasets: 
+* [OKE2016](http://gerbil.aksw.org/gerbil/experiment?id=201806180000)
 * [aida/CoNLL](http://gerbil.aksw.org/gerbil/experiment?id=201806180001)
