@@ -141,3 +141,8 @@ Once you correctly parsed your new gold standard, let's go in *myapp* folder and
 python3 train_ensemble.py <NEW_GOLD_STANDARD_NAME> --lang <NEW_GOLD_STANDARD_LANGUAGE>
 ```
 Executing this command you'll also get the evaluation scores got by the ensemble mdoel for the new gold standard. It could also take hours depending on the number of documents presented in the ground turh.
+
+
+### Evaluation
+To be able to compare our method againist the state of art NED extractors, you can click on the following link to see the D2KB scores for two datasets: * [OKE2016](http://gerbil.aksw.org/gerbil/experiment?id=201806180000)
+* [aida/CoNLL](http://gerbil.aksw.org/gerbil/experiment?id=201806180001)
