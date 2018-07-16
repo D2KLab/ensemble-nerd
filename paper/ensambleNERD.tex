@@ -23,7 +23,7 @@
   {\par\vspace{\abovedisplayskip}\noindent
    \tabularx{\columnwidth}{>{$}l<{$} @{\ : } >{\raggedright\arraybackslash}X}}
   {\endtabularx\par\vspace{\belowdisplayskip}}
-  
+
 \newcommand{\secref}[1]{\mbox{Section~\ref{#1}}}
 \newcommand{\tabref}[1]{\mbox{Table~\ref{#1}}}
 \newcommand{\figref}[1]{\mbox{Figure~\ref{#1}}}
@@ -56,8 +56,8 @@ Lorenzo Canale\inst{1,2} \and Pasquale Lisena\inst{1}
 \and Rapha\"el Troncy\inst{1}}
 \authorrunning{Canale et al.}
 \institute{EURECOM, Sophia Antipolis, France \\
-\email{\{canale|lisena|troncy\}@eurecom.fr} \and 
-Politecnico di Torino, Italy 
+\email{\{canale|lisena|troncy\}@eurecom.fr} \and
+Politecnico di Torino, Italy
 % \email{lorenzo.canale@studenti.polito.it}
 }
 
@@ -68,7 +68,7 @@ Politecnico di Torino, Italy
 %%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-Named entity recognition (NER) and disambiguation (NED) are subtasks of information extraction that aim to recognize named entities mentioned in text, to assign them pre-defined types, and to link them with their matching entities in a knowledge base. Many approaches, often exposed as web APIs, have been proposed to solve these tasks during the last years. These APIs classify entities using different taxonomies and disambiguate them with different knowledge bases. In this paper, we describe Ensemble Nerd, a framework that collects numerous extractors responses, normalizes them and combines them in order to produce a final entity list according to the pattern (surface form, type, link). The presented approach is based on representing the extractors responses as real-value vectors and on using them as input samples for two Deep Learning networks: ENNTR (Ensemble Neural Network for Type Recognition) and ENND (Ensemble Neural Network for Disambiguation). We train these networks using specific gold standards. We show that the models produced outperform each single extractor responses in terms of micro and macro F1 measures computed by the GERBIL framework. 
+Named entity recognition (NER) and disambiguation (NED) are subtasks of information extraction that aim to recognize named entities mentioned in text, to assign them pre-defined types, and to link them with their matching entities in a knowledge base. Many approaches, often exposed as web APIs, have been proposed to solve these tasks during the last years. These APIs classify entities using different taxonomies and disambiguate them with different knowledge bases. In this paper, we describe Ensemble Nerd, a framework that collects numerous extractors responses, normalizes them and combines them in order to produce a final entity list according to the pattern (surface form, type, link). The presented approach is based on representing the extractors responses as real-value vectors and on using them as input samples for two Deep Learning networks: ENNTR (Ensemble Neural Network for Type Recognition) and ENND (Ensemble Neural Network for Disambiguation). We train these networks using specific gold standards. We show that the models produced outperform each single extractor responses in terms of micro and macro F1 measures computed by the GERBIL framework.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,15 +77,15 @@ Named entity recognition (NER) and disambiguation (NED) are subtasks of informat
 
 \section{Introduction}
 \label{sec:introduction}
-A crucial task in knowledge extraction from textual document consists in the two complementary tasks of Named Entity Recognition (NER) and Named Entity Disambiguation (NED), achieving the goal of assigning to parts of text (tokens) respectively a type ---from a pre-defined taxonomy--- and an unique identifier ---normally in the form of URI--- that points univocally to the referred entity in a given knowledge base. The combination of these two tasks is often abbreviated with the acronym NERD~\cite{nerd1,nerd2}. The current state of the art offers an interesting number of NERD extractors. Some of them can be trained by a developer on his own corpus, while other ones are only accessible as black-box services exposed via web APIs offering a limited number of parameters.
+A crucial task in knowledge extraction from textual document consists in the two complementary tasks of Named Entity Recognition (NER) and Named Entity Disambiguation (NED), achieving the goal of assigning to parts of text (tokens) respectively a type ---from a pre-defined taxonomy--- and a unique identifier ---normally in the form of URI--- that points univocally to the referred entity in a given knowledge base. The combination of these two tasks is often abbreviated with the acronym NERD~\cite{nerd1,nerd2}. The current state of the art offers an interesting number of NERD extractors. Some of them can be trained by a developer on his own corpus, while other ones are only accessible as black-box services exposed via web APIs offering a limited number of parameters.
 
-In terms of NER, each service provides generally its own taxonomy of named entity types which can be recognised. While they all provide support for three major types (person, organization, location), they largely differ for more fine-grained types which makes hard their comparison and combination. In terms of NED, each extractor can potentially disambiguate entities against specific knowledge bases (KB), but in practice, they mostly rely on popular ones, namely DBpedia, Wikidata, Freebase or YAGO. For this reason, comparing and merging the results of these extractors require some post-processing tasks that typically rely on mappings between those KBs. This task is however simpler than the type alignment, because of the large presence of interlinks between the different KBs.
+In terms of NER, each service provides generally its own taxonomy of named entity types which can be recognised. While they all provide support for three major types (person, organization, location), they largely differ for more fine-grained types which makes hard their comparison and combination. In terms of NED, each extractor can potentially disambiguate entities against specific knowledge bases (KB), but in practice, they mostly rely on popular ones, namely DBpedia, Wikidata, Freebase or YAGO. For this reason, comparing and merging the results of these extractors require some post-processing tasks that typically rely on mappings between those KBs. This task is however simpler than the type alignment, because of the large presence of \texttt{owl:sameAs} links between the different KBs.
 
-In this paper, we present \textbf{Ensemble Nerd}, a multilingual ensemble method that combines the responses of different NERD extractors. This method relies on a real-value vectorial representation as input samples for two Deep Learning networks, ENNTR (Ensemble Neural Network for Type Recognition) and ENND (Ensemble Neural Network for Disambiguation). The networks provide models for performing type alignment and named entity linking to a knowledge bases. This strategy is evaluated against some well-known gold standards, showing that the output of the ensemble outperforms the results of single extractors. 
+In this paper, we present \textbf{Ensemble Nerd}, a multilingual ensemble method that combines the responses of different NERD extractors. This method relies on a real-value vectorial representation as input samples for two Deep Learning networks, ENNTR (Ensemble Neural Network for Type Recognition) and ENND (Ensemble Neural Network for Disambiguation). The networks provide models for performing type alignment and named entity linking to a knowledge base. This strategy is evaluated against some well-known gold standards, showing that the output of the ensemble outperforms the results of single extractors.
 
 This work aims to answer the following research questions: Can we define an ensemble method that combines the extractors responses in order to create a new more powerful extractor? Is it possible to define an ensemble method that avoids a type alignment step or that computes it automatically, without any human intervention? Which ensemble method should be adopted to exploit all the collected information? Considering that extractors return list of named entities -- together with the type and the disambiguation link of each of them --, how this data can be numerically represented? Can we better understand which features contribute more to improve the ensemble output response? How dependant is this feature selection of the corpora, language, entity types and what is the influence of the KB?
 
-The remainder of this paper is organised as follows. \secref{sec:state-of-art} describes some related work. \secref{sec:study} details how we represent the extractors responses, while \secref{sec:experiment} presents the core of the ensemble method. An evaluation is proposed in \secref{sec:evaluation}, while conclusion and and future work are discussed in \secref{sec:conclusion}.
+The remainder of this paper is organised as follows: \secref{sec:state-of-art} describes some related work. \secref{sec:study} details how we represent the extractors responses, while \secref{sec:experiment} presents the core of the ensemble method. An evaluation is proposed in \secref{sec:evaluation}, while conclusion and and future work are discussed in \secref{sec:conclusion}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 2. State of the art  %%%
@@ -93,14 +93,9 @@ The remainder of this paper is organised as follows. \secref{sec:state-of-art} d
 
 \section{State of the Art}
 \label{sec:state-of-art}
-Ensemble methods in NER and NED tasks have been largely studied.
+Ensemble methods for the NER and NED tasks have already largely been studied in the literature. The \textbf{NERD} framework~\cite{nerd1,nerd2} allows to compare and evaluate some of the most popular named entity extractors. It can analyse any textual resource published on the web and to extract the named entities that are detected, typed and disambiguated by various named entity extractor APIs. For overcoming the different type taxonomies, the authors designed the \textit{NERD ontology} which provides a set of mappings between these various classifications and consequently makes possible an evaluation of the quality of each extractor. This task was originally a one time modeling exercise: the authors manually mapped the different taxonomies to the NERD ontology.
 
-The \textbf{NERD} framework~\cite{nerd1,nerd2} allows to compare and evaluate some of the most popular Linked Data named entity extractors.
-It is able to analyse any textual resource published on the web and to extract the named entities that are detected, typed and disambiguated by various named entity extractor APIs. For overcoming the different type taxonomies, the authors designed the \textit{NERD ontology} which provides a set of mappings between these various classifications and consequently makes possible an evaluation of the quality of each extractor. This task was originally a one time modeling exercise: the authors manually mapped the different taxonomies to the NERD ontology.
-However in \cite{nerd4}, they proposed a more sophisticated and robust approach that uses machine learning inductive techniques for passing from the output type of single extractors to the right entity type in a normalized types set, i.e. the NERD Ontology. The used algorithms are alternatively k-Nearest Neighbour (k-NN) and Naive Bayes (NB).
-
-\textbf{NERD-ML}, a machine learning approach developed on top of the NERD framework, combines the responses of single extractors applying alternatively three different  algorithms: Naive Bayes (NB), k-Nearest Neighbours (k-NN) and Support Vector Machines (SVM)~\cite{nerd2,nerd3}. \textbf{FOX}~\cite{fox1,fox2} is a framework that relies on ensemble learning by integrating and merging the results of four NER tools: the \textbf{Stanford Named Entity Recognizer}~\cite{Finkel:2005:INI:1219840.1219885},
-the \textbf{Illinois Named Entity Tagger}~\cite{Ratinov:2009:DCM:1596374.1596399},
+\textbf{NERD-ML}, a machine learning approach developed on top of the NERD framework, combines the responses of single extractors applying alternatively three different  algorithms: Naive Bayes (NB), k-Nearest Neighbours (k-NN) and Support Vector Machines (SVM)~\cite{nerd2,nerd3}. It is a more sophisticated and robust approach that uses machine learning inductive techniques for passing from the output type of single extractors to the right entity type in a normalized types set, i.e. the NERD Ontology~\cite{nerd4}. \textbf{FOX}~\cite{fox1,fox2} is a framework that relies on ensemble learning by integrating and merging the results of four NER tools: the \textbf{Stanford Named Entity Recognizer}~\cite{Finkel:2005:INI:1219840.1219885}, the \textbf{Illinois Named Entity Tagger}~\cite{Ratinov:2009:DCM:1596374.1596399},
 the \textbf{Ottawa Baseline Information Extraction} (Balie) and the \textbf{Apache OpenNLP Name Finder}. FOX compares the performance of these tools for a small set of classes namely LOCATION, ORGANIZATION and PERSON. For achieving this goal, the entity types of each NER tools is mapped to these three classes. Given any input text $t$, FOX processes $t$ with each of the $n$ tools it integrates. The result of each tool $T_i$ is a piece of annotated text $t_i$, in which either a specific class or zero (not belonging to the label of a named entity) is assigned to each token. The tokens in $t$ are then represented as vectors of length $n$ and are used for getting the final type. The author demonstrates that a Multi-Layer Perceptron (MLP) gets the best results among a pool of 15 different algorithms~\cite{fox2}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,7 +105,7 @@ the \textbf{Ottawa Baseline Information Extraction} (Balie) and the \textbf{Apac
 \section{Feature Engineering for NERD}
 \label{sec:study}
 Ensemble Nerd currently integrates a set of 8 extractors shown in \tabref{tab:exout}. An extractor can belong to the set $T$ (extractors that perform NER task) or to the set $U$ (extractors that perform NED task). Currently, \textit{TextRazor} is the only one in both sets: $T \cap U = \left \{  TextRazor \right \}$. All these extractors relies on Wikidata, Wikipedia or DBpedia for entity disambiguation.
- 
+
 \begin{table}[b]
 \centering
 \label{tab:exout}
@@ -132,8 +127,7 @@ OpenCalais    & \cmark  & \xmark \\ \hline
 
 Each extractor produces a list of named entities as response for a specific input text. From this output, we generate 4 different kinds of feature.
 
-\textbf{1. Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. We consider also the stop words, assigning also to them a real-value vectorial representation.
-The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{x}}$ as the real-valued vector associated to a specific token $x$:
+\textbf{1. Surface form features}. They are strictly related to the text used to extract named entity. The input text is split into tokens and a word embedding representation is assigned to each of them. We consider also the stop words, assigning also to them a real-value vectorial representation. The word vectors are computed using \textit{fastText}~\cite{fasttext}. We define $\vec{s^{x}}$ as the real-valued vector associated to a specific token $x$:
 
 \begin{equation}
 \vec{s^{x}} = \left [  \vec{s^{x}_p}|\vec{s^{x}_c} \right ], dim(\vec{s^{x}})=400
@@ -150,7 +144,7 @@ $\vec{s^{x}_c}$, $dim(\vec{s^{x}_c})=100$, is the token embedding computed when 
 Level 1 includes three types: PLACE, ORGANIZATION and PERSON.
 \end{item}
 \begin{item}
-Level 2 includes four types: CITY and MOUNTAIN (subtypes of PLACE) and ACTOR and MUSICIAN (subtypes of PERSON). 
+Level 2 includes four types: CITY and MOUNTAIN (subtypes of PLACE) and ACTOR and MUSICIAN (subtypes of PERSON).
 \end{item}
 \end{enumerate}
 
@@ -179,7 +173,7 @@ PLACE           & 100   & CITY      & 0100  \\ \hline
 \caption{Representation of types through one-hot encoding.}
 \end{table}
 
-For a generic type $\tau$ in the last layer (e.g. ACTOR), the features vector $v_{\tau}$ consists in the concatenation of the one-hot representation of each type founded on the walk from the root to the leaf associate to $\tau$. The features vector for ACTOR is therefore  \texttt{0010001}, where the first three values \texttt{001} derive from PERSON and the last four values \texttt{0001} derive from ACTOR. Hence, we can state that $dim(v_{\tau})= \sum_{i}^{L}C_i$. If the extractor $e \in T$ returns a type that is not the last level in the hierarchy, as PERSON, we fill the missing vector positions with \texttt{0}. The features vector $v_{PERSON}$ associated to PERSON is thus \texttt{0010000}. This mechanism is extensible to any taxonomy. However the $dim(v_{\tau})$ is different for each extractor, depending on the taxonomy that it uses. 
+For a generic type $\tau$ in the last layer (e.g. ACTOR), the features vector $v_{\tau}$ consists in the concatenation of the one-hot representation of each type founded on the walk from the root to the leaf associate to $\tau$. The features vector for ACTOR is therefore  \texttt{0010001}, where the first three values \texttt{001} derive from PERSON and the last four values \texttt{0001} derive from ACTOR. Hence, we can state that $dim(v_{\tau})= \sum_{i}^{L}C_i$. If the extractor $e \in T$ returns a type that is not the last level in the hierarchy, as PERSON, we fill the missing vector positions with \texttt{0}. The features vector $v_{PERSON}$ associated to PERSON is thus \texttt{0010000}. This mechanism is extensible to any taxonomy. However the $dim(v_{\tau})$ is different for each extractor, depending on the taxonomy that it uses.
 
 This procedure can be extended also to extractors that do not perform NER. A generic extractor $e$, where $e \in U \wedge e \not\in T$, returns a link for each entity. Following the interlinks between KBs, we can always obtain an entity in Wikidata. The type of the entity would be the class of this entity in Wikidata, which is the value of the property \textit{instance of (P31)}\footnote{\label{P31} \url{https://www.wikidata.org/wiki/Property:P31}}. Entities might possess multiple types and for this reason they are represented through K-hot encoding.
 
@@ -190,7 +184,7 @@ For a \textbf{typed named entity} $w^t$ with the format \texttt{(surface form, t
 \begin{item}
 the first dimension $S_{uri}(w_1,w_2)$ indicates if the compared entities share the same URI with a Boolean; \end{item}
 \begin{item}
-the second dimension provides the string similarity between the labels $l_{w_1}$ and $l_{w_2}$ associated to the compared entities: 
+the second dimension provides the string similarity between the labels $l_{w_1}$ and $l_{w_2}$ associated to the compared entities:
 $$S_{Lev}(w_1,w_2) = max(1-d_{Lev}(l_{w_1},l_{w_2})/\beta,0), \beta = 8$$
 
 where $d_{Lev}(l_{w_1},l_{w_2})$ is the \textbf{Levenshtein distance} between the compared strings and $\beta$ is a constant equals to the number of maximum differences after which the similarity is saturated to 0.
@@ -235,7 +229,7 @@ Babelfy      & DBpedia     & 100\%    \\ \hline
 \caption{Coverage of matching against Wikipedia of disambiguated entity in the ground truth.}
 \end{table}
 
-\textbf{4. Score features}. Some extractors return scores representing either the confidence or the saliency for each named entity. For each extractor $e \in K$, $w^k$ is a \textbf{named entity score} with the format \texttt{(surface form, scores)}. 
+\textbf{4. Score features}. Some extractors return scores representing either the confidence or the saliency for each named entity. For each extractor $e \in K$, $w^k$ is a \textbf{named entity score} with the format \texttt{(surface form, scores)}.
 We define $\vec{v^{w^{k}}_{e}}$ as the features vector representing the scores for $w^k$ and the extractor $e$.  $dim(\vec{v^{w^{k}}_{e}})$ depends on the considered extractors, more precisely on the number of scores returned by it.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -249,9 +243,9 @@ Our experimental ensemble method relies on two Neural Networks that receive in i
 These networks architectures come after a series of previous experiments that involved LSTM and BiLSTM, receiving a complete vector including all the features as input sample. A really slow training, the ease of network overfitting to the sample input, and huge difference in dimensionality (and so in impact to the results) between the different features were some of the reasons for which we have abandoned these approaches.
 
 \subsubsection{Ensemble Neural Network for Type Recognition (ENNTR).}
-We consider a generic ground truth $GT$ formed by $N$ textual fragments (e.g. sentences), such that we can split each fragment in tokens. $X_i$ is the ordered list of tokens for fragment $i$. Concatenating the lists $X_i$, we get a list $X$, that is the ordered list of tokens for the whole corpus. We call $x$ a generic token in $X$. 
+We consider a generic ground truth $GT$ formed by $N$ textual fragments (e.g. sentences), such that we can split each fragment in tokens. $X_i$ is the ordered list of tokens for fragment $i$. Concatenating the lists $X_i$, we get a list $X$, that is the ordered list of tokens for the whole corpus. We call $x$ a generic token in $X$.
 
-$GT$ associates a type in a taxonomy $o_{Gt}$ to each token $x$. We identify the neural network target as $Y_t$. The number of samples in $Y_t$ is equal to the total number of tokens: $dim(Y_t)=dim(X)$. The neural network goal is to assign the right type to each token and its architecture is represented in Figure~\ref{fig:architecture_type_recognition}. 
+$GT$ associates a type in a taxonomy $o_{Gt}$ to each token $x$. We identify the neural network target as $Y_t$. The number of samples in $Y_t$ is equal to the total number of tokens: $dim(Y_t)=dim(X)$. The neural network goal is to assign the right type to each token and its architecture is represented in Figure~\ref{fig:architecture_type_recognition}.
 
 \begin{figure}
 	\centering
@@ -272,7 +266,7 @@ All the input layers works at token level, so that the features at entity level 
 In particular, $I_T$  receives in input a type features vector $\vec{t^{x}_{e}}$, computed like:
 
 \begin{equation} \label{eq:type_feat}
-\vec{t^{x}_{e}} = \left\{\begin{matrix} 
+\vec{t^{x}_{e}} = \left\{\begin{matrix}
 \vec{v^{w^t}_{e}} & if \: x \in X_{w^{t}}\\
 \vec{d_t} & if \: x \notin X_{w^{t}}
 \end{matrix}\right.
@@ -283,7 +277,7 @@ $$\vec{d_t} = [0,...,0], dim(d_k) == dim(\vec{v^{w^{t}}_{e}})$$
 Similarly, $I_K$  receives in input a type features vector $\vec{k^{x}_{e}}$, computed like:
 
 \begin{equation} \label{eq:score_feat}
-\vec{k^{x}_{e}} = \left\{\begin{matrix} 
+\vec{k^{x}_{e}} = \left\{\begin{matrix}
 \vec{v^{w^k}_{e}} & if \: x \in X_{w^{k}}\\
 \vec{d_k} & if \: x \notin X_{w^{k}}
 \end{matrix}\right.
@@ -294,7 +288,7 @@ $$\vec{d_k} = [0,...,0], dim(d_k) == dim(\vec{v^{w^{k}}_{e}})$$
 The Wikidata entity $u^{x}_{e}$ for the token $x$ is:
 
 \begin{equation} \label{eq:score_feat1}
-u^{x}_{e} = \left\{\begin{matrix} 
+u^{x}_{e} = \left\{\begin{matrix}
 u^{w^{u}}_{e} & if \: x \in X_{w^{u}}\\
 NAN & if \: x \notin X_{w^{u}}
 \end{matrix}\right.
@@ -306,16 +300,13 @@ $$ \vec{u^{x}} = [S(u^{x}_{1},u^{x}_{1}),S(u^{x}_{1},u^{x}_{2}),...,S(u^{x}_{P},
 
 Finally, the input layers $I_S$ receive the surface features vector $\vec{s^{x}}$ without any further transformation.
 
-
-%% da qui
-
 Each input layer $I_n$ is fully connected with a layer $M_n$. $M_n$, like $O$, is composed by $H$ neurons, where $H$ is the number of types in the ground truth. The activation of neurons in $M_n$ is linear.
 
-In this first part of the network, each $I_n$ ---composed by a different number of neurons depending on the related features vector--- is mapped on $H$ neurons in $M_n$. This avoids that the neural network privileges features vectors with higher dimension -- it happens directly concatenating different features vectors. This part of the network can be considered as an \textbf{alignment block} since it automatically map the types between the extractors and the ground truth taxonomy. This is pretty similar to the \textit{Inductive Entity Typing Alignment} work described in~\cite{nerd4}, with the difference that the alignment step is learned by a fully connected layer. Differently from previous works \cite{fox1,fox2}, the approach does not need any preliminary alignment and recognition, because they are part of the same network. 
+In this first part of the network, each $I_n$ ---composed by a different number of neurons depending on the related features vector--- is mapped on $H$ neurons in $M_n$. This avoids that the neural network privileges features vectors with higher dimension -- it happens directly concatenating different features vectors. This part of the network can be considered as an \textbf{alignment block} since it automatically map the types between the extractors and the ground truth taxonomy. This is pretty similar to the \textit{Inductive Entity Typing Alignment} work described in~\cite{nerd4}, with the difference that the alignment step is learned by a fully connected layer. Differently from previous works \cite{fox1,fox2}, the approach does not need any preliminary alignment and recognition, because they are part of the same network.
 
 The last part of the network is the \textbf{ensemble block}. $M_k$ layers are concatenated forming a new layer $R$. $\left\vert{o_{GT}}\right\vert$ is the number of types in the ground truth, $\left\vert{I}\right\vert$ the number of input layers and $\left\vert{P}\right\vert$ the number of neurons in $R$:
  $$\left\vert{P}\right\vert =  \left\vert{o_{GT}}\right\vert \cdot \left\vert{I}\right\vert$$
- 
+
 $R$ is fully connected to the output layer $O$. The activation of the neurons in $O$ is linear. This means that ENNTR finally consists in a linear combinations of features: the key is the way in which the features are generated and entered in the network. The values $v_h$ of the $H$ output neurons in $O$ correspond to the probability that a given type is correct. We take the highest value $v_{max}$ between them and if it is greater than a threshold $\theta$, we set the type related to its neuron as the predicted one. The final output of the ensemble method is a list of predicted type $l_{p}$ for each token $x$. In a final step, sequences of token which belong to the same type are merged to a single entity, similarly to \cite{fox1,fox2}.
 
 \subsubsection{Ensemble Neural Network for Disambiguation (ENND)}
@@ -330,7 +321,7 @@ We consider a ground truth $GT$, similar to the one seen for ENNTR, that this ti
 
 The ENND architecture is represented in \figref{fig:NN_disambiguation}. Differently from related work, the goal of the network would not be to directly predict the right disambiguated entity, but to determine if the predicted entity by an extractor $e$, where $e \in U$, is correct or not. For this reason, the number of samples in target $Y_d$ is not equal to the number of tokens. For each token $x$, each extractor $e$ returns a predicted entity $\vec{u^{x}_{e}}$: we call $C_x$ the set of predicted entities for the token $x$, and  $v_x$ the correct entity; $\left\vert{C_x}\right\vert \leq \left\vert{U}\right\vert$ because more extractors could predict the same entity.
 For each candidate $c_{x,j} \in C_x$, where $0 < j \leq \left\vert{C_x}\right\vert$, we generate a target sample $y_d \in Y_d$:
-$$y_d  = \left\{\begin{matrix} 
+$$y_d  = \left\{\begin{matrix}
 1 & if \: c_{x,j} =  v_x\\
 0 & if \: c_{x,j} \neq v_x
 \end{matrix}\right.$$
@@ -346,20 +337,20 @@ $$\vec{u_{x,j}} = [\vec{S}(c_{x,j},u^{x}_{1})|\vec{S}(c_{x,j},u^{x}_{2})|...|\ve
 $$dim(\vec{u_{x,j}}) = dim(\vec{S(w_1,w_2)}) \cdot  card(U) $$
 
 The input layers $I_T$ receive in input the the type feature vector $\vec{t^{w}_{e}}$, computed with the same method used for ENNTR. $I_T$ layers are fully connected to the layers $M_n$ as in ENNTR. $M_n$ is formed by $H$ neurons, where $H$ is an hyper-parameter, set to 4 during our experiment. As for ENNTR, the $M_n$ activation is linear.
- 
+
 After this step, the $I_U$ layer and the $M_k$ layers are concatenated in a new layer $R$. In this layer, some neurons represent the type information, some other the entity features. This combination aims to exploit the fact that some extractors better disambiguate on certain types. The number of neurons in $R$ is equal to $dim(\vec{u_{x,j}}) + \left\vert{T \cup U}\right\vert \cdot H$.
 
 The last part of the network is composed by two dense layers\footnote{A \textit{dense layer} is a layer fully connected to the previous one.} and the output layer $O$ discussed before. The activation functions of the dense layers cannot be a \textit{softmax} function since the number of candidates ---and so is the number of neurons in the output layer--- is variable according to each specific token. We so opted for the \textbf{Scaled Exponential Linear Units (selu)}:
-$$selu(x) = \lambda \left\{\begin{matrix} 
+$$selu(x) = \lambda \left\{\begin{matrix}
 x & if \: x > 0\\
-\alpha e^{x} - \alpha & if \: x \leq 0 
+\alpha e^{x} - \alpha & if \: x \leq 0
 \end{matrix}\right.$$
 
 The loss function used to train the network is the Mean Square Error, that gives slightly better results and similar training time if compared to MSE.
 
 The neural network goal is to determine the probability that an entity candidate is right. In fact, for each sample, we get an output value that corresponds to this probability.
-$o_{x,j}$ corresponds to the output value of the input sample associated to the candidate entity $j$ for token $x$. 
-We select the candidate associated with the highest value $o_{x,max}$ among all output values $\left \{  o_{x,1},o_{x,2},...,o_{x,card(C_x)} \right \}$. Defining a threshold $\tau_d$, if $o_{x,max} > \tau_d$, we can select as predicted entity for token $x$ the one related to $o_{x,max}$. Otherwise, we consider that the token $x$ is not part of a named entity. This process of \textbf{candidate selection} returns the list $z_{p}$ of predicted Wikidata entities identifiers at token level. In a final step, sequences of tokens which belong to the same Wikidata entity identifiers are merged to a single entity. $A_{p}$ represents the predicted corpus of annotated fragments. 
+$o_{x,j}$ corresponds to the output value of the input sample associated to the candidate entity $j$ for token $x$.
+We select the candidate associated with the highest value $o_{x,max}$ among all output values $\left \{  o_{x,1},o_{x,2},...,o_{x,card(C_x)} \right \}$. Defining a threshold $\tau_d$, if $o_{x,max} > \tau_d$, we can select as predicted entity for token $x$ the one related to $o_{x,max}$. Otherwise, we consider that the token $x$ is not part of a named entity. This process of \textbf{candidate selection} returns the list $z_{p}$ of predicted Wikidata entities identifiers at token level. In a final step, sequences of tokens which belong to the same Wikidata entity identifiers are merged to a single entity. $A_{p}$ represents the predicted corpus of annotated fragments.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  5. Experiment and Evaluation  %%%
@@ -373,28 +364,16 @@ In order to make our approach comparable with the state of the art, our evaluati
 \begin{itemize}
  \item \textbf{OKE2016}: annotated corpus of English textual resources, created for the 2016 OKE Challenge. The types set contains 4 different tags. \footnote{PERSON, ORGANIZATION, PLACE, ROLE.} This ground truth disambiguates the entities using DBpedia. The ensemble technique we use for scoring is averaging, but not boosting or bagging.
 
- \item \textbf{AIDA/CoNLL}: English corpus and contains assignments of entities to the mentions of named entities, linked to DBpedia. This dataset does not infer types for NEs and can only be used for evaluating NED. 
- \item \textbf{NexGenTv corpus}:\footnote{\url{http://enerd.eurecom.fr/data/training_data/nexgen_tv_corpus/}} dataset composed of 77 annotated fragments of transcripts from politician television debates in French.\footnote{The debates are in the context of the 2017 French presidential election.} Each fragment lasts in average 2 minutes. The corpus is split in 64 training and 13 test samples. The list of types includes 13 different labels.\footnote{PERSON, ORGANIZATION, GEOGRAPHICAL POINT, TIME, TIME INTERVAL, NUMBER, QUANTITY, OCCURRENCE, EVENT, INTELLECTUAL WORK, ROLE, GROUP OF HUMANS and OCCUPATION.} Entities are disambiguated through Wikidata.
+ \item \textbf{AIDA/CoNLL}: English corpus and contains assignments of entities to the mentions of named entities, linked to DBpedia. This dataset does not infer types for NEs and can only be used for evaluating NED.
+ \item \textbf{NexGenTV corpus}:\footnote{\url{http://enerd.eurecom.fr/data/training_data/nexgen_tv_corpus/}} dataset composed of 77 annotated fragments of transcripts from politician television debates in French.\footnote{The debates are in the context of the 2017 French presidential election.} Each fragment lasts in average 2 minutes. The corpus is split in 64 training and 13 test samples. The list of types includes 13 different labels.\footnote{PERSON, ORGANIZATION, GEOGRAPHICAL POINT, TIME, TIME INTERVAL, NUMBER, QUANTITY, OCCURRENCE, EVENT, INTELLECTUAL WORK, ROLE, GROUP OF HUMANS and OCCUPATION.} Entities are disambiguated through Wikidata.
 \end{itemize}
 
-\subsubsection{Type recognition}
-For each gold standard $GT$, two different kinds of score are computed.
-The \textit{token based} scores have been used in \cite{fox1,fox2}. From $GT$, a list of target types $l_{t}$ with dimension $\left\vert{X}\right\vert$ is extracted. We can obtain from ENNTR the list of predicted types $l_{p}$. For each type $t_{GT}$ in $GT$, we compute precision $Precision(l_{t},l_{p},t_{GT})$, recall $Recall(l_{t},l_{p},t_{GT})$ and F1 score $F1(l_{t},l_{p},t_{GT})$. Then, we compute micro averaged measures $Precision_{micro}(l_{t},l_{p})$, $Recall_{micro}(l_{t},l_{p})$ and $F1_{micro}(l_{t},l_{p})$. \cite{sebastiani2002mltext}
-
-The \textit{entity based} scores follow the definition of precision and recall coming from the \textbf{MUC-7 test scoring}~\cite{M98-1024}. Given $A_{t}$ and $A_{p}$ as the annotated fragment in $GT$, the computed measures are 
-$Precision_{brat}(A_{t},A_{p})$, $Recall_{brat}(A_{t},A_{p})$ and 
-$F1_{brat}(A_{t},A_{p})$. 
-
-%\todo{results type per type do not fit here. Put them on the repo?}
-
-The computed scores for OKE2016 and NexGenTv corpora are reported in \tabref{typescoresOKE2016} and \ref{typescoresNEXGENTV}. The tables show also the same metrics applied to single extractors, after that their output types have been mapped to the ones of $GT$ through the alignment block of ENNTR. For both token and entity scores, the ensemble method outperforms the single extractors for all metrics.
-
-\begin{table}[p]
+\begin{table}[htbp]
     \setlength{\tabcolsep}{12pt}
     \centering
     \begin{tabular}{c|c|c|c|c|c|c|}
       \multicolumn{1}{c}{ } &
-      \multicolumn{3}{|c|}{TOKEN BASED} & 
+      \multicolumn{3}{|c|}{TOKEN BASED} &
       \multicolumn{3}{|c|}{ENTITY BASED} \\
        \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
        & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
@@ -408,23 +387,32 @@ The computed scores for OKE2016 and NexGenTv corpora are reported in \tabref{typ
         \textbf{textrazor}       & 0,74   & 0,86   & 0,65 & 0,77  & 0,81  & 0,74 \\ \hline \hline
         \textbf{ensemble}        & \textbf{0,91}   & \textbf{0,91}   & \textbf{0,91}  & \textbf{0,94} & \textbf{0,95}  & \textbf{0,92} \\ \hline
        \textbf{ensemble ($I=I_T$)}        & \textbf{0,88}   & \textbf{0,91}   & \textbf{0,85}  & \textbf{0,88} & \textbf{0,92}  & \textbf{0,84} \\\hline
-       \textbf{ensemble ($I=I_S$)}        & \textbf{0.50}   & \textbf{0,53}   & \textbf{0,47}  & \textbf{0.50} & \textbf{0,52}  & \textbf{0,48} \\\hline    
+       \textbf{ensemble ($I=I_S$)}        & \textbf{0.50}   & \textbf{0,53}   & \textbf{0,47}  & \textbf{0.50} & \textbf{0,52}  & \textbf{0,48} \\\hline
        \textbf{ensemble ($I=I_U$)}        & \textbf{0.44}   & \textbf{0,47}   & \textbf{0,41}  & \textbf{0.43} & \textbf{0,43}  & \textbf{0,43} \\\hline
-       \textbf{ensemble ($I=I_K$)}        & \textbf{0,37}   & \textbf{0,40}   & \textbf{0,34}  & \textbf{0,38} & \textbf{0,40}  & \textbf{0,36} \\\hline    
+       \textbf{ensemble ($I=I_K$)}        & \textbf{0,37}   & \textbf{0,40}   & \textbf{0,34}  & \textbf{0,38} & \textbf{0,40}  & \textbf{0,36} \\\hline
     \end{tabular}
     \caption{OKE2016 corpus NER Evaluation}
     \label{typescoresOKE2016}
 \end{table}
 
-\begin{table}[p]
+\subsubsection{Type recognition.}
+For each gold standard $GT$, two different kinds of score are computed. The \textit{token based} scores have been used in \cite{fox1,fox2}. From $GT$, a list of target types $l_{t}$ with dimension $\left\vert{X}\right\vert$ is extracted. We can obtain from ENNTR the list of predicted types $l_{p}$. For each type $t_{GT}$ in $GT$, we compute precision $Precision(l_{t},l_{p},t_{GT})$, recall $Recall(l_{t},l_{p},t_{GT})$ and F1 score $F1(l_{t},l_{p},t_{GT})$. Then, we compute micro averaged measures $Precision_{micro}(l_{t},l_{p})$, $Recall_{micro}(l_{t},l_{p})$ and $F1_{micro}(l_{t},l_{p})$. \cite{sebastiani2002mltext}
+
+The \textit{entity based} scores follow the definition of precision and recall coming from the \textbf{MUC-7 test scoring}~\cite{M98-1024}. Given $A_{t}$ and $A_{p}$ as the annotated fragment in $GT$, the computed measures are
+$Precision_{brat}(A_{t},A_{p})$, $Recall_{brat}(A_{t},A_{p})$ and
+$F1_{brat}(A_{t},A_{p})$.
+
+The computed scores for OKE2016 and NexGenTv corpora are reported in \tabref{typescoresOKE2016} and \ref{typescoresNEXGENTV}. The tables show also the same metrics applied to single extractors, after that their output types have been mapped to the ones of $GT$ through the alignment block of ENNTR. For both token and entity scores, the ensemble method outperforms the single extractors for all metrics.
+
+\begin{table}[htbp]
       \centering
       \setlength{\tabcolsep}{12pt}
       \begin{tabular}{c|c|c|c|c|c|c|}
       \multicolumn{1}{c}{ } &
-      \multicolumn{3}{|c|}{TOKEN BASED} & 
+      \multicolumn{3}{|c|}{TOKEN BASED} &
       \multicolumn{3}{|c|}{ENTITY BASED} \\
-      & \textbf{fsc} &\textbf{pre} & \textbf{rec} 
-      & \textbf{fsc} &\textbf{pre} & \textbf{rec} 
+      & \textbf{fsc} &\textbf{pre} & \textbf{rec}
+      & \textbf{fsc} &\textbf{pre} & \textbf{rec}
       \\ \hline
       \textbf{adel}           & 0,68  & 0,84  & 0,57 & 0,75  & 0,83  & 0,7  \\ \hline
       \textbf{alchemy}        & 0,80  & 0,83  & 0,77 & 0,87  & 0,97  & 0,81 \\ \hline
@@ -436,30 +424,25 @@ The computed scores for OKE2016 and NexGenTv corpora are reported in \tabref{typ
       \textbf{textrazor}      & 0,81  & 0,89  & 0,74 & 0,75  & 0,8   & 0,72 \\ \hline \hline
       \textbf{ensemble}       & \textbf{0,94}  & \textbf{0.97}  & \textbf{0,91}  & \textbf{0,92} & \textbf{0,98}  & \textbf{0,87} \\ \hline
       \textbf{ensemble ($I=I_T$)}        & \textbf{0,87}   & \textbf{0,91}   & \textbf{0,83}  & \textbf{0,89} & \textbf{0,93}  & \textbf{0,85} \\ \hline
-       \textbf{ensemble ($I=I_S$)}        & \textbf{0.54}   & \textbf{0,58}   & \textbf{0,50}  & \textbf{0.53} & \textbf{0,56}  & \textbf{0.50} \\\hline    
+       \textbf{ensemble ($I=I_S$)}        & \textbf{0.54}   & \textbf{0,58}   & \textbf{0,50}  & \textbf{0.53} & \textbf{0,56}  & \textbf{0.50} \\\hline
        \textbf{ensemble ($I=I_U$)}        & \textbf{0.47}   & \textbf{0,49}   & \textbf{0,45}  & \textbf{0.46} & \textbf{0,47}  & \textbf{0,45} \\\hline
-       \textbf{ensemble ($I=I_K$)}        & \textbf{0,40}   & \textbf{0,42}   & \textbf{0,38}  & \textbf{0,39} & \textbf{0,40}  & \textbf{0,38} \\\hline    
+       \textbf{ensemble ($I=I_K$)}        & \textbf{0,40}   & \textbf{0,42}   & \textbf{0,38}  & \textbf{0,39} & \textbf{0,40}  & \textbf{0,38} \\\hline
       \end{tabular}
     \caption{NexGenTv corpus NER Evaluation}
     \label{typescoresNEXGENTV}
-
 \end{table}
-
-
 
 In order to identify the most impacting features in the obtained results, ENTTR has been sequentially adapted and retrained in order to receive in input only a specific kind of features, i.e. only $I_T$, $I_K$, $I_U$ or $I_S$. The tokens based scores for these new trained networks reveals that the type features \textit{$I_T$} are the only ones that, used alone as input, continue to make ENTRR outperforming single extractors, as can be expected given the type recognition goal. The other feature kinds, while having a lower impact, are still improving the final results when combined in the ensemble.
 
-\subsubsection{Entity Linking}
-
+\subsubsection{Entity Linking.}
 We evaluate the entity linking for both OKE2016, AIDA/CoNLL and NexGenTv corpora  using the GERBIL framework\footnote{GERBIL is a general Linked Data benchmarking that offers an easy-to-use web-based platform for the agile comparison of annotators using multiple datasets and uniform measuring approaches.} and in particular micro and macro scores for the experiment type ``Disambiguate to Knowledge Base'' (D2KB). The computed scores are reported in \tabref{linkscoresmicro} and \ref{linkscoresmacro}; the ensemble method outperforms again the single extractors that it integrates for all metrics. As for type recognition, we repeated the experiment using only a specific kind of features, in order to show the feature impact. In such case, the most influential features are the entity ones \textit{$I_U$}. However, the impact of type features \textit{$I_T$} is still crucial because its absence reduce drastically the improvement of the ensemble method with respect to the single extractors.
-
 
 \begin{table}[p]
       \centering
       \setlength{\tabcolsep}{5pt}
         \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
-          \multicolumn{3}{|c|}{OKE2016} & 
+          \multicolumn{3}{|c|}{OKE2016} &
           \multicolumn{3}{|c|}{NEXGEN} &
           \multicolumn{3}{|c|}{AIDA}\\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
@@ -469,23 +452,21 @@ We evaluate the entity linking for both OKE2016, AIDA/CoNLL and NexGenTv corpora
             \textbf{dbspotlight}     & 0,39   & 0,53   & 0,30 & 0,38   & 0,29  & 0,54 & 0,47	& 0,65 & 0,36 \\ \hline
             \textbf{textrazor}       & 0,53   & 0,78   & 0,40 & 0,61  & 0,55  & 0,69 & 0,62 & 0.57 & 0.53\\ \hline \hline
             \textbf{ensemble}        & \textbf{0,66}   & \textbf{0,88}   & \textbf{0,52}  & \textbf{0,69} & \textbf{0,70}  & \textbf{0,64} & \textbf{0,68}   & \textbf{0,79}   & \textbf{0,60} \\ \hline
-            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,80}   & \textbf{0,47}  & \textbf{0,59} & \textbf{0,60}  & \textbf{0,58} 
+            \textbf{ensemble ($I=I_U$)}        & \textbf{0,59}   & \textbf{0,80}   & \textbf{0,47}  & \textbf{0,59} & \textbf{0,60}  & \textbf{0,58}
             & \textbf{0,55}   & \textbf{0,60}   & \textbf{0,50} \\ \hline
-            \textbf{ensemble ($I=I_T$)}        & \textbf{0,41}   & \textbf{0,45}   & \textbf{0,38}  & \textbf{0,42} & \textbf{0,47}  & \textbf{0,38} 
+            \textbf{ensemble ($I=I_T$)}        & \textbf{0,41}   & \textbf{0,45}   & \textbf{0,38}  & \textbf{0,42} & \textbf{0,47}  & \textbf{0,38}
             & \textbf{0,48}   & \textbf{0,52}   & \textbf{0,45} \\ \hline
         \end{tabular}
-    \caption{GERBIL Micro scores on OKE2016,NexGenTV and AIDA/CoNLL corpus}
+    \caption{GERBIL Micro scores on OKE2016, NexGenTV and AIDA/CoNLL corpus}
     \label{linkscoresmicro}
 \end{table}
-
-
 
 \begin{table}[p]
       \centering
       \setlength{\tabcolsep}{5pt}
         \begin{tabular}{c|c|c|c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
-          \multicolumn{3}{|c|}{OKE2016} & 
+          \multicolumn{3}{|c|}{OKE2016} &
           \multicolumn{3}{|c|}{NEXGEN} &
           \multicolumn{3}{|c|}{AIDA}\\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
@@ -511,7 +492,7 @@ For the NexGenTV dataset, we cannot compare the other NERD extractors because th
       \setlength{\tabcolsep}{12pt}
         \begin{tabular}{c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
-          \multicolumn{3}{|c|}{Micro scores} & 
+          \multicolumn{3}{|c|}{Micro scores} &
           \multicolumn{3}{|c|}{Macro scores} \\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
            & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
@@ -533,7 +514,7 @@ For the NexGenTV dataset, we cannot compare the other NERD extractors because th
       \setlength{\tabcolsep}{12pt}
         \begin{tabular}{c|c|c|c|c|c|c|}
           \multicolumn{1}{c}{ } &
-          \multicolumn{3}{|c|}{Micro scores} & 
+          \multicolumn{3}{|c|}{Micro scores} &
           \multicolumn{3}{|c|}{Macro scores} \\
            \multicolumn{1}{c|}{ } & \textbf{fsc} & \textbf{pre} & \textbf{rec}
            & \textbf{fsc} & \textbf{pre} & \textbf{rec} \\ \hline
@@ -550,12 +531,6 @@ For the NexGenTV dataset, we cannot compare the other NERD extractors because th
     \label{linkscoresgerbilaida}
 \end{table}
 
-
-
-%%% ADDED
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  6. Conclusion and Future Work  %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -565,9 +540,7 @@ For the NexGenTV dataset, we cannot compare the other NERD extractors because th
 In this paper, we presented two multilingual ensemble methods which combine the responses of web services (extractors) performing Named Entity Recognition and Disambiguation. The method relies on two Neural Networks that outperform the single extractors respectively in NER and NED tasks. Furthermore, the NER network allows to avoid the manually type alignment between the type taxonomies of each extractor and the ground truth taxonomy. We demonstrated the importance of the features generation for the success of these ensemble methods. In terms of NER, the type features play most of the work in the ensemble. For the NED task, while entity features have the greater impact, only a combination with type features really improve the effectiveness of the ensemble method with respect to single extractor predictions.
 
 As future work, we plan to enhance the input feature set with Part of Speech tags features that would be assigned to each token. We also aim
-to vary the neural network architecture, and in particular, we are planning to replace the dense layer receiving the surface features with a BiLSTM, which would also take in consideration the context in which the tokens are sequentially appearing. Finally, all the neural networks models have been trained when all extractors APIs were reachable. 
-%However, it happens that some APIs can be out of service for some reasons (e.g. maintenance). In those cases, even if it would continue working, the results of our ensemble method may be influenced by those partially invalid inputs.
-A training that involves some samples which simulates the extractors failures and unavailability would make the network models more robust to API failures.
+to vary the neural network architecture, and in particular, we are planning to replace the dense layer receiving the surface features with a BiLSTM, which would also take in consideration the context in which the tokens are sequentially appearing. Finally, all the neural networks models have been trained when all extractors APIs were reachable. A training that involves some samples which simulates the extractors failures and unavailability would make the network models more robust to API failures.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%  Acknowledgements  %%%
@@ -580,4 +553,4 @@ This work has been partially supported by the French National Research Agency (A
 \bibliographystyle{abbrv}
 \bibliography{references}
 
-\end{document} 
+\end{document}
